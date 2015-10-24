@@ -609,7 +609,7 @@
 
 <p>In this task you need to implement the <code>EnvironmentLight::sample_L()</code> method in <i> </i> <em>static_scene/environment_light.cpp</em>.  You'll start with uniform direction sampling to get things working, and then move to a more advanced implementation that uses <strong>importance sampling</strong> to significantly reduce variance in rendered images.</p>
 
-<p>__Step one: uniform sampling __</p>
+<p><strong>Step one: uniform sampling</strong></p>
 
 <p>To get things working, your first implementation of <code>EnvironmentLight::sample_L()</code> will be quite simple.  You should generate a random direction on the sphere (<strong>with uniform $\frac{1}{4\pi}$ probability with respect to solid angle</strong>), convert this direction to coordinates $(\phi,\theta)$ and then look up the appropriate radiance value in the texture map using <strong>bilinear interpolation</strong> (note: we recommend you begin with bilinear interpolation to keep things simple.)</p>
 
@@ -622,7 +622,7 @@
 <li>The size of the environment texture is given by <code>envMap-&gt;w</code> and <code>envMap-&gt;h</code>.</li>
 </ul>
 
-<p>__Step two: importance sampling the environment map __</p>
+<p><strong>Step two: importance sampling the environment map</strong></p>
 
 <p>Much like light in the real world, most of the energy provided by an environment light source is concentrated in the directions toward bright light sources. <strong>Therefore, it makes sense to bias selection of sampled directions towards the directions for which incoming radiance is the greatest.</strong>  In this final task you will implement an importance sampling scheme for environment lights.  For environment lights with large variation in incoming light intensities, good importance sampling will significantly improve the quality of renderings.</p>
 
