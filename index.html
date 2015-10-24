@@ -601,7 +601,7 @@
 <h3>
 <a id="task-7-infinite-environment-lighting" class="anchor" href="#task-7-infinite-environment-lighting" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 7: Infinite Environment Lighting</h3>
 
-<p>The final task of this assignment will be to implement a new type of light source: an infinite environment light.  An environment light is a light that supplies incident radiance (really, the light intensity d_Phi/d_omega) from all directions on the sphere.  The source is thought to be "infinitely far away", and is representative of realistic lighting environments in the real world: as a result, rendering using environment lighting can be quite striking.</p>
+<p>The final task of this assignment will be to implement a new type of light source: an infinite environment light.  An environment light is a light that supplies incident radiance (really, the light intensity dPhi/dOmega) from all directions on the sphere.  The source is thought to be "infinitely far away", and is representative of realistic lighting environments in the real world: as a result, rendering using environment lighting can be quite striking.</p>
 
 <p>The intensity of incoming light from each direction is defined by a texture map parameterized by phi and theta, as shown below.</p>
 
@@ -612,6 +612,8 @@
 <p><strong>Step one: uniform sampling</strong></p>
 
 <p>To get things working, your first implementation of <code>EnvironmentLight::sample_L()</code> will be quite simple.  You should generate a random direction on the sphere (<strong>with uniform (1/4pi) probability with respect to solid angle</strong>), convert this direction to coordinates (phi, theta) and then look up the appropriate radiance value in the texture map using <strong>bilinear interpolation</strong> (note: we recommend you begin with bilinear interpolation to keep things simple.)</p>
+
+<p>You an designate rendering to use a particular environment map using the <code>-e</code> commandline parameter:  (e.g., <code>-e ../exr/grace.exr</code> )</p>
 
 <p><strong>Tips:</strong></p>
 
