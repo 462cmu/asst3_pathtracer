@@ -582,14 +582,14 @@
 <ol>
 <li><p>Implement the class <code>MirrorBSDF</code> which represents a  material with perfect specular reflection (a perfect mirror).  You should Implement <code>MirrorBSDF::f()</code>, <code>MirrorBSFD::sample_f()</code>, and <code>BSDF::reflect()</code>.  <strong>(Hint: what should the pdf computed by <code>MirrorBSFD::sample_f()</code> be?  What should the reflectance function f() be?)</strong></p></li>
 <li>
-<p>Implement the class  <code>GlassBSDF</code> which is a glass-like material that both reflects light and transmit light.  As discussed <a href="http://15462.courses.cs.cmu.edu/fall2015/lecture/reflection/slide_035">in class</a> the fraction of light that is reflected and transmitted through glass is given by the <strong>dielectric Fresnel equations</strong>, which are <a href="http://15462.courses.cs.cmu.edu/fall2015/article/17/edit">documented in detail here</a>.  Specifically your implementation should:</p>
+<p>Implement the class  <code>GlassBSDF</code> which is a glass-like material that both reflects light and transmit light.  As discussed <a href="http://15462.courses.cs.cmu.edu/fall2015/lecture/reflection/slide_035">in class</a> the fraction of light that is reflected and transmitted through glass is given by the <strong>dielectric Fresnel equations</strong>, which are <a href="http://15462.courses.cs.cmu.edu/fall2015/article/15">documented in detail here</a>.  Specifically your implementation should:</p>
 
 <ul>
 <li>
 <code>Implement BSDF::refract()</code> to add support for refracted ray paths.</li>
 <li>Use the Fresnel equations to compute the fraction of reflected light and the fraction of transmitted light. Your implementation of</li>
 <li> Implement <code>GlassBSDF::sample_f()</code>.  Your implementation should use the Fresnel equations to compute the fraction of reflected light and the fraction of transmitted light.  The returned ray sample should be either a reflection ray or a refracted ray, with the probability of which type of ray to use for the current path proportional to the Fresnel reflectance. (e.g., If the Fresnel reflectance is 0.9, then you should generate a reflection ray 90% of the time. <strong>What should the pdf be in this case?</strong>)</li>
-<li>You may wish to read <a href="http://15462.courses.cs.cmu.edu/fall2015/article/17/edit">Kayvon's notes</a> on Fresnel equations as well as on how to compute a transmittance BRDF. </li>
+<li>You should read <a href="http://15462.courses.cs.cmu.edu/fall2015/article/15">the provided notes</a> on the Fresnel equations as well as on how to compute a transmittance BRDF. </li>
 </ul>
 </li>
 </ol>
@@ -601,9 +601,9 @@
 <h3>
 <a id="task-7-infinite-environment-lighting" class="anchor" href="#task-7-infinite-environment-lighting" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 7: Infinite Environment Lighting</h3>
 
-<p>The final task of this assignment will be to implement a new type of light source: an infinite environment light.  An environment light is a light that supplies incident radiance (really, the light intensity $\frac{d\Phi}{d\omega}$) from all directions on the sphere.  The source is thought to be "infinitely far away", and is representative of realistic lighting environments in the real world: as a result, rendering using environment lighting can be quite striking.</p>
+<p>The final task of this assignment will be to implement a new type of light source: an infinite environment light.  An environment light is a light that supplies incident radiance (really, the light intensity d_Phi/d_omega) from all directions on the sphere.  The source is thought to be "infinitely far away", and is representative of realistic lighting environments in the real world: as a result, rendering using environment lighting can be quite striking.</p>
 
-<p>The intensity of incoming light from each direction is defined by a texture map parameterized by $\phi$ and $\theta$, as shown below.</p>
+<p>The intensity of incoming light from each direction is defined by a texture map parameterized by phi and theta, as shown below.</p>
 
 <p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/envmap_figure.jpg" alt="Environment map"></p>
 
@@ -611,7 +611,7 @@
 
 <p><strong>Step one: uniform sampling</strong></p>
 
-<p>To get things working, your first implementation of <code>EnvironmentLight::sample_L()</code> will be quite simple.  You should generate a random direction on the sphere (<strong>with uniform $\frac{1}{4\pi}$ probability with respect to solid angle</strong>), convert this direction to coordinates $(\phi,\theta)$ and then look up the appropriate radiance value in the texture map using <strong>bilinear interpolation</strong> (note: we recommend you begin with bilinear interpolation to keep things simple.)</p>
+<p>To get things working, your first implementation of <code>EnvironmentLight::sample_L()</code> will be quite simple.  You should generate a random direction on the sphere (<strong>with uniform (1/4pi) probability with respect to solid angle</strong>), convert this direction to coordinates (phi, theta) and then look up the appropriate radiance value in the texture map using <strong>bilinear interpolation</strong> (note: we recommend you begin with bilinear interpolation to keep things simple.)</p>
 
 <p><strong>Tips:</strong></p>
 
@@ -626,29 +626,13 @@
 
 <p>Much like light in the real world, most of the energy provided by an environment light source is concentrated in the directions toward bright light sources. <strong>Therefore, it makes sense to bias selection of sampled directions towards the directions for which incoming radiance is the greatest.</strong>  In this final task you will implement an importance sampling scheme for environment lights.  For environment lights with large variation in incoming light intensities, good importance sampling will significantly improve the quality of renderings.</p>
 
-<p>The basic idea is that you will assign a probability to each pixel in the environment map based on the total flux passing through the solid angle it represents.  Specifically, a pixel with coordinate $\theta=\theta_0$ subtends an area $\sin \theta \, d\theta \, d\phi$ on the unit sphere (where $d\theta$ and $d\phi$ the angles subtended by each pixel -- as determined by the resolution of the texture).  Thus, the flux through a pixel is proportional to $L \, \sin \theta$.   (We only care about the relative flux through each pixel to create a distribution.)</p>
-
-<p><strong>Summing the fluxes for all pixels, then normalizing the values so that they sum to one, yields a discrete probability distribution for picking a pixel based on flux through its corresponding solid angle on the sphere.</strong></p>
-
-<p>The question is now how to sample from this 2D discrete probability distribution.  We recommend the following process which reduces the problem to drawing samples from two 1D distributions, each time using the inversion method discussed in class:</p>
-
-<ul>
-<li>Given p($\phi$, $\theta$) the probability distribution for all pixels, compute the marginal probability distribution p($\theta$) = $\sum_{\phi}$ p($\phi$, $\theta$) for selecting a value from each row of pixels.</li>
-<li>Given for any pixel, compute the conditional probability p($\phi$ | $\theta$) as $\frac{p(\phi, \theta)}{p(\theta)}$.</li>
-</ul>
-
-<p>Given the marginal distribution for $\theta$ and the conditional distributions p($\phi$ | $\theta$) for environment map rows, it is easy to select a pixel as follows:</p>
-
-<ol>
-<li>Use the inversion method to first select a "row" of the environment map according to p($\theta$).</li>
-<li>Given this row, use the inversion method to select a pixel in the row according to p($\phi$ | $\theta$).</li>
-</ol>
+<p>The basic idea is that you will assign a probability to each pixel in the environment map based on the total flux passing through the solid angle it represents.  We've written up a <a href="http://15462.courses.cs.cmu.edu/fall2015/article/15">detailed set of notes for you here</a> (see "Task 7 notes").</p>
 
 <p><strong>Here are a few tips:</strong></p>
 
 <ul>
-<li>When computing areas corresponding to a pixel, use the value of $\theta$ at the pixels center.</li>
-<li> We recommend precomputing the joint distributions p($\phi$, $\theta$) and marginal distributions p($\theta$) in the constructor of <code>EnvironmentLight</code> and storing the resulting values in fields of the class.</li>
+<li>When computing areas corresponding to a pixel, use the value of theta at the pixel centers.</li>
+<li> We recommend precomputing the joint distributions p(phi, theta) and marginal distributions p(theta) in the constructor of <code>EnvironmentLight</code> and storing the resulting values in fields of the class.</li>
 <li>
 <code>Spectrum::illum()</code> returns the luminance (brightness) of a Spectrum.  The probability of a pixel should be proportional to the product of its luminance and the solid angle it subtends.</li>
 <li>
