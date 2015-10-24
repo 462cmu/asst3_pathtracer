@@ -391,7 +391,7 @@
 
 <p><strong>Step 1: Intersecting Triangles</strong></p>
 
-<p>While faster implementations are possible, we recommend you implement ray-triangle intersection using the method described in the <a href="http://15462.courses.cs.cmu.edu/fall2015/lecture/acceleration/slide_004">lecture slides</a>. Further details of implementing this method efficiently are given in [these notes].</p>
+<p>While faster implementations are possible, we recommend you implement ray-triangle intersection using the method described in the <a href="http://15462.courses.cs.cmu.edu/fall2015/lecture/acceleration/slide_004">lecture slides</a>. Further details of implementing this method efficiently are given in <a href="http://15462.courses.cs.cmu.edu/fall2015/article/15">these notes</a>.</p>
 
 <p>There are two important details you should be aware of about intersection:</p>
 
@@ -407,7 +407,7 @@
 <li>
 <code>primitive</code>: a pointer to the primitive  that was hit</li>
 <li>
-<code>brdf</code>: a pointer to the surface brdf at the hit point (obtained via) </li>
+<code>bsdf</code>: a pointer to the surface brdf at the hit point (obtained via <code>mesh-&gt;get_bsdf()</code>) </li>
 </ul>
 </li>
 <li><p>When intersection occurs with the back-face of a triangle (the side of the triangle opposite the direction of the normal) you should <strong>return the normal of triangle pointing away from the side of the triangle that was hit.</strong></p></li>
@@ -476,7 +476,7 @@
 <p>Your job is to implement the logic needed to compute whether <code>hit_p</code> is in shadow with respect to the current light source sample.  Below are a few tips:</p>
 
 <ul>
-<li>A common pitfall is for the "shadow ray" shot into the scene to determine occlude hits the same triangle as <code>r</code>.  We recommend that you make sure the origin of this ray is offset from the surface to avoid these "self-intersections".  For example, <code>o</code> = <code>p_hit + epsilon * dir_to_light</code>  (note: <code>EPS_D</code> is defined for this purpose).</li>
+<li>A common ray tracing pitfall is for the "shadow ray" shot into the scene to accidentally hit the same triangle as <code>r</code> (the surface is erroneously determined to be occluded because the shadow ray is determined to hit the surface!).  We recommend that you make sure the origin of the shadow ray is offset from the surface to avoid these erroneous "self-intersections".  For example, <code>o</code> = <code>p_hit + epsilon * dir_to_light</code>  (note: <code>EPS_D</code> is defined for this purpose).</li>
 <li>You will find it useful to debug your shadow code using the <code>DirectionalLight</code> since it produces hard shadows that are easy to reason about.<br>
 </li>
 </ul>
@@ -510,7 +510,7 @@
 
 <p>In this task you will modify your ray tracer to add support for indirect illumination.  We wish for you to implement the path tracing algorithm that terminates ray paths using Russian Roulette, as discussed in class.  Recommend that you restructure the code in <code>Pathtracer::trace_ray</code> as follows:</p>
 
-<pre><code>Spectrum::Pathtracer::trace_ray() {
+<pre><code>Pathtracer::trace_ray() {
   if (surface hit) {
        //
        // compute reflectance due to direct lighting only         
@@ -533,7 +533,7 @@
 }
 </code></pre>
 
-<p>After correctly implementing path tracing your rendering should be able to make a beautifully lit picture like this (note: the image of the simple Cornell Box below was rendering using 256 camera rays per pixel, and thus takes at lot time to render!):</p>
+<p>After correctly implementing path tracing your renderer should be able to make a beautifully lit picture like this (note: the image of the simple Cornell Box below was rendering using 256 camera rays per pixel, and thus takes a lot of time to render!):</p>
 
 <pre><code>./pathtracer -l 1 -s 256 -m 4 -t 7 ../dae/sky/CBspheres_lambertian.dae
 </code></pre>
@@ -542,7 +542,7 @@
 
 <p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cb_lambertian_close.png" alt="Cornell box 256 close"></p>
 
-<p>Here is a quicker rendering using only 1 path per pixel:</p>
+<p>Here is a quicker (but much noisier) rendering using only 1 path per pixel:</p>
 
 <p>./pathtracer -l 1 -s 1 -m 4 -t 7 ../dae/sky/CBspheres_lambertian.dae</p>
 
@@ -551,9 +551,9 @@
 <p>Here are a few tips:</p>
 
 <ul>
-<li><p>The termination probability of paths can be determined based on the <a href="http://15462.courses.cs.cmu.edu/fall2015/lecture/globalillum/slide_044">overall throughput</a> of the path (you'll likely need to add a field to the <code>Ray</code> structure to implement this) or based on the value of the BSDF in the current step.  Keep in mind that delta function BRDFs can take on values greater than one, so clamp terminatin probabilities to 1.</p></li>
-<li><p>To convert a Spectrum to a termination property, we recommend you use the luminance (overall brightness) of the Spectrum, which is available via <code>Spectrum::illum()</code></p></li>
-<li><p>We've given you some <a href="http://15462.courses.cs.cmu.edu/fall2015/lecture/globalillum/slide_047">pretty good notes</a> on how to do this part of the assignment.</p></li>
+<li><p>The termination probability of paths can be determined based on the <a href="http://15462.courses.cs.cmu.edu/fall2015/lecture/globalillum/slide_044">overall throughput</a> of the path (you'll likely need to add a field to the <code>Ray</code> structure to implement this) or based on the value of the BSDF given <code>wo</code> and <code>wi</code> in the current step.  Keep in mind that delta function BRDFs can take on values greater than one, so clamping termination probabilities derived from BRDF values to 1 is wise.</p></li>
+<li><p>To convert a <code>Spectrum</code> to a termination probability, we recommend you use the luminance (overall brightness) of the Spectrum, which is available via <code>Spectrum::illum()</code></p></li>
+<li><p>We've given you some <a href="http://15462.courses.cs.cmu.edu/fall2015/lecture/globalillum/slide_047">pretty good notes</a> on how to do this part of the assignment, but it can still be tricky to get correct.</p></li>
 </ul>
 
 <h3>
@@ -599,9 +599,9 @@
 <p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cb_spheres_256.png" alt="Cornell box spheres 256"></p>
 
 <h3>
-<a id="task-7-infinite-environment-lighting-environment-lights" class="anchor" href="#task-7-infinite-environment-lighting-environment-lights" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 7: Infinite Environment Lighting (Environment Lights)</h3>
+<a id="task-7-infinite-environment-lighting" class="anchor" href="#task-7-infinite-environment-lighting" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 7: Infinite Environment Lighting</h3>
 
-<p>The final tasks of this assignment will be to implement a new type of light source: an infinite environment light.  An environment light is a light that supplies incident radiance (really, light intensity $\frac{d\Phi}{d\omega}$) from all directions on the sphere.  The source is thought to be "infinity far away", and is representative of realistic lighting environments in the real world: as a result rendering using environment lighting can be quite striking.</p>
+<p>The final task of this assignment will be to implement a new type of light source: an infinite environment light.  An environment light is a light that supplies incident radiance (really, the light intensity $\frac{d\Phi}{d\omega}$) from all directions on the sphere.  The source is thought to be "infinitely far away", and is representative of realistic lighting environments in the real world: as a result, rendering using environment lighting can be quite striking.</p>
 
 <p>The intensity of incoming light from each direction is defined by a texture map parameterized by $\phi$ and $\theta$, as shown below.</p>
 
@@ -616,6 +616,7 @@
 <p><strong>Tips:</strong></p>
 
 <ul>
+<li>You must write your own code to uniformly sample the sphere.</li>
 <li>
 <code>envMap-&gt;data</code> contains the pixels of the environment map</li>
 <li>The size of the environment texture is given by <code>envMap-&gt;w</code> and <code>envMap-&gt;h</code>.</li>
@@ -623,20 +624,20 @@
 
 <p>__Step two: importance sampling the environment map __</p>
 
-<p>Much like light in the real world, most of the energy provided by an environment light source is concentrated in the directions toward bright light sources. Therefore, it makes sense to bias selection of sampled directions towards the directions for which incoming radiance is the greatest.  In this final task you will implement an importance sampling scheme for environment lights.</p>
+<p>Much like light in the real world, most of the energy provided by an environment light source is concentrated in the directions toward bright light sources. <strong>Therefore, it makes sense to bias selection of sampled directions towards the directions for which incoming radiance is the greatest.</strong>  In this final task you will implement an importance sampling scheme for environment lights.  For environment lights with large variation in incoming light intensities, good importance sampling will significantly improve the quality of renderings.</p>
 
-<p>The basic idea is that you will assign a probability to each pixel in the environment map based on the total flux passing through the solid angle it represents.  Specifically, a pixel with coordinate $\theta=\theta_0$ subtends an area $\sin \theta \, d\theta \, d\phi$ on the unit sphere (where $d\theta$ and $d\phi$ the angles subtended by a pixel.)  Therefore the flux through a pixel is proportional to $L \, \sin \theta$.   </p>
+<p>The basic idea is that you will assign a probability to each pixel in the environment map based on the total flux passing through the solid angle it represents.  Specifically, a pixel with coordinate $\theta=\theta_0$ subtends an area $\sin \theta \, d\theta \, d\phi$ on the unit sphere (where $d\theta$ and $d\phi$ the angles subtended by each pixel -- as determined by the resolution of the texture).  Thus, the flux through a pixel is proportional to $L \, \sin \theta$.   (We only care about the relative flux through each pixel to create a distribution.)</p>
 
-<p>Therefore, by <strong>summing the fluxes for all pixels, and then normalizing the values so that they sum to one yields a discrete probability distribution for picking a pixel based on flux through it.</strong></p>
+<p><strong>Summing the fluxes for all pixels, then normalizing the values so that they sum to one, yields a discrete probability distribution for picking a pixel based on flux through its corresponding solid angle on the sphere.</strong></p>
 
-<p>The question is now how to sample from this 2D discrete probability distribution.  We recommend the following process which reduces the problem to drawing samples from two 1D distribution:</p>
+<p>The question is now how to sample from this 2D discrete probability distribution.  We recommend the following process which reduces the problem to drawing samples from two 1D distributions, each time using the inversion method discussed in class:</p>
 
 <ul>
-<li>Given p($\phi$, $\theta$) the probability distribution for all pixels, compute the marginal probability distribution p($\theta$) = $\sum_{\phi}$ p($\phi$, $\theta$)</li>
-<li>Given for any pixel, compute p($\phi$ | $\theta$) as $\frac{p(\phi, \theta)}{p(\theta)}$.</li>
+<li>Given p($\phi$, $\theta$) the probability distribution for all pixels, compute the marginal probability distribution p($\theta$) = $\sum_{\phi}$ p($\phi$, $\theta$) for selecting a value from each row of pixels.</li>
+<li>Given for any pixel, compute the conditional probability p($\phi$ | $\theta$) as $\frac{p(\phi, \theta)}{p(\theta)}$.</li>
 </ul>
 
-<p>Given the marginal distribution for $\theta$ and each of the conditional distributions p($\phi$ | $\theta$) , you can select a pixel as follows:</p>
+<p>Given the marginal distribution for $\theta$ and the conditional distributions p($\phi$ | $\theta$) for environment map rows, it is easy to select a pixel as follows:</p>
 
 <ol>
 <li>Use the inversion method to first select a "row" of the environment map according to p($\theta$).</li>
@@ -650,6 +651,8 @@
 <li> We recommend precomputing the joint distributions p($\phi$, $\theta$) and marginal distributions p($\theta$) in the constructor of <code>EnvironmentLight</code> and storing the resulting values in fields of the class.</li>
 <li>
 <code>Spectrum::illum()</code> returns the luminance (brightness) of a Spectrum.  The probability of a pixel should be proportional to the product of its luminance and the solid angle it subtends.</li>
+<li>
+<code>std::binary_search</code> is your friend. Documentation <a href="http://en.cppreference.com/w/cpp/algorithm/binary_search">is here</a>.</li>
 </ul>
 
 <h3>
