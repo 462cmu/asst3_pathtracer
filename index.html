@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Asst3 pathtracer by 462cmu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Asst3 pathtracer</h1>
+      <h2 class="project-tagline">CMU 15-462/662 Assignment 3: A Mini-Path Tracer</h2>
+      <a href="https://github.com/462cmu/asst3_pathtracer" class="btn">View on GitHub</a>
+      <a href="https://github.com/462cmu/asst3_pathtracer/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/462cmu/asst3_pathtracer/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/teaser.jpg" alt="Resampled mesh"></p>
+
+<h3>
+<a id="due-date" class="anchor" href="#due-date" aria-hidden="true"><span class="octicon octicon-link"></span></a>Due Date</h3>
+
+<p>Monday, Nov 2nd, 11:59pm</p>
+
+<h3>
+<a id="overview" class="anchor" href="#overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview</h3>
+
+<p>In this project you will implement a simple path tracer that can render pictures with global illumination effects.  The first part of the assignment will focus on providing an efficient implementation of <strong>ray-scene geometry queries</strong>.  In the second half of the assignment you will <strong>add the ability to simulate how light bounces around the scene</strong>, which will allow your renderer to synthesize much higher-quality images.  Much like in assignment 2, input scenes are defined in COLLADA files, so you can create your own scenes for your scenes to render using free software like <a href="http://blender.org">Blender</a>.)</p>
+
+<h3>
+<a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting started</h3>
+
+<p>We will be distributing assignments with git. You can find the repository for this assignment at <a href="http://462cmu.github.io/asst3_pathtracer/">http://462cmu.github.io/asst3_pathtracer/</a>. If you are unfamiliar with git, here is what you need to do to get the starter code:</p>
+
+<pre><code>$ git clone https://github.com/462cmu/asst3_pathtracer.git
+</code></pre>
+
+<p>This will create a <i> </i> <em>asst3_pathtracer</em> folder with all the source files.</p>
+
+<h3>
+<a id="build-instructions" class="anchor" href="#build-instructions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Build Instructions</h3>
+
+<p>In order to ease the process of running on different platforms, we will be using <a href="http://www.cmake.org" title="CMake Homepage">CMake</a> for our assignments. You will need a CMake installation of version 2.8+ to build the code for this assignment. The GHC 5xxx cluster machines have all the packages required to build the project. It should also be relatively easy to build the assignment and work locally on your OSX or Linux. Building on Windows is currently not supported.</p>
+
+<p>If you are working on OS X and do not have CMake installed, we recommend installing it through <a href="https://www.macports.org/">Macports</a>:</p>
+
+<pre><code>sudo port install cmake
+</code></pre>
+
+<p>Or <a href="http://brew.sh/">Homebrew</a>:</p>
+
+<pre><code>brew install cmake
+</code></pre>
+
+<p>To build your code for this assignment:</p>
+
+<ul>
+<li>Create a directory to build your code:</li>
+</ul>
+
+<pre><code>$ cd asst3_pathtracer &amp;&amp; mkdir build &amp;&amp; cd build
+</code></pre>
+
+<ul>
+<li>Run CMake to generate makefile:</li>
+</ul>
+
+<pre><code>$ cmake ..
+</code></pre>
+
+<ul>
+<li>Build your code:</li>
+</ul>
+
+<pre><code>$ make
+</code></pre>
+
+<ul>
+<li>(Optionally) install the executable (to asst3_pathtracer/bin):</li>
+</ul>
+
+<pre><code>$ make install
+</code></pre>
+
+<h3>
+<a id="using-the-path-tracer-app" class="anchor" href="#using-the-path-tracer-app" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using the Path Tracer app</h3>
+
+<p>When you have successfully built your code, you will get an executable named <strong>pathtracer</strong>. The <strong>pathtracer</strong> executable takes exactly one argument from the command line, which is the path of a COLLADA file describing the scene. For example, to load the Keenan cow <i> </i><em>dae/meshEdit/cow.dae</em> from your build directory:</p>
+
+<pre><code>./pathtracer ../dae/meshEdit/cow.dae
+</code></pre>
+
+<p>The following are <code>pathtracer</code> app command line options, which are provided for convenience and to debug debugging:</p>
+
+<table>
+<thead>
+<tr>
+<th>Commandline Option</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-t &lt;INT&gt;</code></td>
+<td align="left">Number of threads used for rendering (default=1)</td>
+</tr>
+<tr>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td><code>-s &lt;INT&gt;</code></td>
+<td align="left">Set the number of camera rays per pixel (default=1) (should be a power of two)</td>
+</tr>
+<tr>
+<td><code>-l &lt;INT&gt;</code></td>
+<td align="left">Number of samples to integrate light from area light sources (default=1, higher numbers decrease noise but increase rendering time)</td>
+</tr>
+<tr>
+<td><code>-m &lt;INT&gt;</code></td>
+<td align="left">Maximum ray "depth" (the number of bounces on a ray path before the path is terminated)</td>
+</tr>
+<tr>
+<td><code>-h</code></td>
+<td align="left">Print command line help</td>
+</tr>
+</tbody>
+</table>
+
+<h4>
+<a id="mesh-editor-mode" class="anchor" href="#mesh-editor-mode" aria-hidden="true"><span class="octicon octicon-link"></span></a>Mesh Editor Mode</h4>
+
+<p>When you first run the application, you will see an interactive wireframe view of the scene that should be familiar to you from Assignment 2. You can rotate the camera by left-clicking and dragging, zoom in/out using the scroll wheel (or multi-touch scrolling on a trackpad), and translate (dolly) the camera using right-click drag.  Hitting the spacebar will reset the view.  </p>
+
+<p>As with assignment 2, you'll notice that mesh elements (faces, edges, and vertices) under the cursor are highlighted.  Clicking on these mesh elements will display information about the element and its associated data. The UI has all the same mesh editing controls as the MeshEdit app from Assignment 2 (listed below).  If you copy your implementation of these operators from Assignment 2 into your Assignment 3 codebase, then you will be able to edit scene geometry using the app. </p>
+
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/editor_ui.png" alt="PathTracer GUI"></p>
+
+<h4>
+<a id="rendered-output-mode-and-bvh-visualization-mode" class="anchor" href="#rendered-output-mode-and-bvh-visualization-mode" aria-hidden="true"><span class="octicon octicon-link"></span></a>Rendered Output Mode and BVH Visualization Mode</h4>
+
+<p>In addition to the mesh editing UI, the app features two other UI modes. Pressing the <kbd>R</kbd> key toggles display to the rendered output of your ray tracer.  If you press <kbd>R</kbd> in the starter code, you will see a black screen (You have not implemented your ray tracer yet! ).  However, a correct implementation of the assignment will make pictures of the cow that looks like the one below.  </p>
+
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cow_render.png" alt="PathTracer GUI"></p>
+
+<p>Pressing <kbd>E</kbd> returns to the mesh editor view.  Pressing <kbd>V</kbd> displays the BVH visualizer mode, which will be a helpful visualization tool for debugging the bounding volume hierarchy you will need to implement for this assignment.  (More on this later.)</p>
+
+<h3>
+<a id="summary-of-viewer-controls" class="anchor" href="#summary-of-viewer-controls" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summary of Viewer Controls</h3>
+
+<p>A table of all the keyboard controls in the interactive mesh viewer part of the <strong>pathtracer</strong> application is provided below.</p>
+
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th align="left">Key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Flip the selected edge</td>
+<td align="left"><kbd>F</kbd></td>
+</tr>
+<tr>
+<td>Split the selected edge</td>
+<td align="left"><kbd>S</kbd></td>
+</tr>
+<tr>
+<td>Collapse the selected edge</td>
+<td align="left"><kbd>C</kbd></td>
+</tr>
+<tr>
+<td>Upsample the current mesh</td>
+<td align="left"><kbd>U</kbd></td>
+</tr>
+<tr>
+<td>Downsample the current mesh</td>
+<td align="left"><kbd>D</kbd></td>
+</tr>
+<tr>
+<td>Resample the current mesh</td>
+<td align="left"><kbd>M</kbd></td>
+</tr>
+<tr>
+<td>Toggle information overlay</td>
+<td align="left"><kbd>H</kbd></td>
+</tr>
+<tr>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>Return to mesh edit mode</td>
+<td align="left"><kbd>E</kbd></td>
+</tr>
+<tr>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>Show BVH visualizer mode</td>
+<td align="left"><kbd>V</kbd></td>
+</tr>
+<tr>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>Show ray traced output</td>
+<td align="left"><kbd>R</kbd></td>
+</tr>
+<tr>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>Decrease area light samples (RT mode)</td>
+<td align="left"><kbd>-</kbd></td>
+</tr>
+<tr>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>Increase area light samples (RT mode)</td>
+<td align="left"><kbd>+</kbd></td>
+</tr>
+<tr>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>Decrease samples (camera rays) per pixel</td>
+<td align="left"><kbd>[</kbd></td>
+</tr>
+<tr>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>Increase samples (camera rays) per pixel</td>
+<td align="left"><kbd>]</kbd></td>
+</tr>
+<tr>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>Descend to left child (BVH viz mode)</td>
+<td align="left"><kbd>LEFT</kbd></td>
+</tr>
+<tr>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>Descend to right child (BVH viz mode)</td>
+<td align="left"><kbd>RIGHT</kbd></td>
+</tr>
+<tr>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>Move to parent node (BVH viz mode)</td>
+<td align="left"><kbd>UP</kbd></td>
+</tr>
+<tr>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>Reset camera to default position</td>
+<td align="left"><kbd>SPACE</kbd></td>
+</tr>
+<tr>
+<td>Edit a vertex position</td>
+<td align="left">(left-click and drag on vertex)</td>
+</tr>
+<tr>
+<td>Rotate camera</td>
+<td align="left">(left-click and drag on background)</td>
+</tr>
+<tr>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>Zoom camera</td>
+<td align="left">(mouse wheel)</td>
+</tr>
+<tr>
+<td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td>Dolly (translate) camera</td>
+<td align="left">(right-click and drag on background)</td>
+</tr>
+</tbody>
+</table>
+
+<h3>
+<a id="getting-acquainted-with-the-starter-code" class="anchor" href="#getting-acquainted-with-the-starter-code" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting Acquainted with the Starter Code</h3>
+
+<p>Following the design of modern ray tracing systems, we have chosen to implement the ray tracing components of the Assignment 3 starter code in a very modular fashion.  Therefore, unlike previous assignments, your implementation will touch a number of files in the starter code.  The main structure of the code base is:</p>
+
+<ul>
+<li>The main workhorse class is <code>Raytracer</code> defined in <i> </i> <em>raytracer.cpp</em>.  Inside the ray tracer class everything begins with the method <code>Raytracer::raytrace_pixel()</code> in <i> </i> <em>raytracer.cpp</em>.  This method computes the value of the specified pixel in the output image.</li>
+<li>The camera is defined in the <code>Camera</code> class in <i> </i> <em>camera.cpp</em>.  You will need to modify `Camera::generate_ray()' in Part 1 of the assignment to generate the camera rays that are sent out into the scene.</li>
+<li>Scene objects (e.g., triangles and spheres) are instances of the <code>Primitive</code> interface defined in <i> </i> <em>static_scene/Primitive.h</em>.  You will need to implement the <code>Primitive::intersect()</code> method for both triangles and spheres.</li>
+<li>Lights implement the <code>Light</code> interface defined in  <i> </i> <em>static_scene/Light.h</em>.  The initial starter code has working implementations of directional lights and constant hemispherical lights.</li>
+<li>Light energy is represented by instances of the <code>Spectrum</code> class.  While it's tempting, we encourage you to avoid thinking of spectrums as colors -- think of them as a measurement of energy over many wavelengths.  Although our current implementation only represents spectrums by red, green, and blue components (much like the RGB representations of color you've used previously in this class), this abstraction makes it possible to consider other implementations of spectrum in the future.  Spectrums can be converted into colors using the <code>Spectrum::toColor()</code> method. </li>
+<li>A major portion of the first half of the assignment concerns implementing a bounding volume hierarchy (BVH) that accelerates ray-scene intersection queries.  The implementation of the BVH will be located in <i> </i> <em>bvh.cpp/.h</em>.  Note that a BVH is also an instance of the <code>Primitive</code> interface (A BVH is a scene primitive that itself contains other primitives.)</li>
+</ul>
+
+<p>Please refer to the inline comments (or the Doxygen documentation) for further details.</p>
+
+<h3>
+<a id="task-1-generating-camera-rays" class="anchor" href="#task-1-generating-camera-rays" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 1: Generating Camera Rays</h3>
+
+<p>"Camera rays" emanate from the camera and measure the amount of scene radiance that reaches a point on the camera's sensor plane.  (Given a point on the virtual sensor plane, there is a corresponding camera ray that is traced into the scene.)</p>
+
+<p>Take a look at <code>Raytracer::raytrace_pixel()</code> in <i> </i> <em>raytracer.cpp</em>.  The job of this function is to compute the amount of energy arriving at this pixel of the image. Conveniently, we've given you a function <code>Raytracer::trace_ray(r)</code> that provides a measurement of incoming scene radiance along the direction given by ray <code>r</code>.</p>
+
+<p>When the number of samples per pixel is 1, you should sample incoming radiance at the <strong>center of each pixel</strong> by constructing a ray <code>r</code> that begins at this sensor location and travels through the camera's pinhole.   Once you have computed this ray, then call <code>Raytracer::trace_ray(r)</code> to get the energy deposited in the pixel.</p>
+
+<p><strong>Step 1:</strong> Given the width and height of the screen, and point in screen space, compute the corresponding coordinates of the point in normalized ([0-1]x[0x1]) screen space in <code>Raytracer::raytrace_pixel()</code>.  Pass these coordinates to the camera via <code>Camera::generate_ray()</code> in <i> </i> <em>camera.cpp</em>.  </p>
+
+<p><strong>Step 2:</strong> Implement <code>Camera::generate_ray()</code>. This function should return a ray <strong>in world space</strong> that reaches the given sensor sample point.  We recommend that you compute this ray in camera space (where the camera pinhole is at the origin, the camera is looking down the -Z axis, and +Y is at the top of the screen.)  Note that the camera maintains camera-space-to-world space transform <code>c2w</code> that will be handy.</p>
+
+<p><strong>Step 3:</strong> Your implementation of <code>Raytracer::raytrace_pixel()</code> must support supersampling (more than one sample per pixel).  The member <code>Raytracer::ns_aa</code> in the raytracer class gives the number of samples of scene radiance your ray tracer should take per pixel (a.k.a. the number of camera rays per pixel.  Note that <code>Raytracer::sampler2d-&gt;get_sample()</code>  provides uniformly distributed random 2D points in the [0-1]^2 box (see the implementation in <i> </i> <em>sampler.cpp</em>).</p>
+
+<p><strong>Tips:</strong> Since it'll be hard to know if you camera rays are correct until you implement primitive intersection, we recommend debugging your camera rays by checking what your implementation of <code>Camera::generate_ray()</code> does with rays at the center of the screen (0.5, 0.5) and at the corners of the image.</p>
+
+<p><strong>Extra credit ideas:</strong></p>
+
+<ul>
+<li>Modify the implementation of the camera to simulate a camera with a finite aperture (rather than a pinhole camera).  This will allow your ray tracer to simulate the effect of defocus blur.</li>
+<li>Write your own <code>Sampler2D</code> implementation that generates samples with improved distribution.  Some examples include:
+
+<ul>
+<li>Jittered Sampling</li>
+<li>Multi-jittered sampling</li>
+<li>N-Rooks (Latin Hypercube) sampling</li>
+<li>Sobol sequence sampling</li>
+<li>Halton sequence sampling</li>
+<li>Hammersley sequence sampling</li>
+</ul>
+</li>
+</ul>
+
+<h3>
+<a id="task-2-intersecting-triangles-and-spheres" class="anchor" href="#task-2-intersecting-triangles-and-spheres" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 2: Intersecting Triangles and Spheres</h3>
+
+<p>Now that your ray tracer generates camera rays, you need to implement ray-primitive intersection routines for the two primitives in the starter code: triangles and spheres.  This handout will discuss the requirements of intersecting primitives in terms of triangles.</p>
+
+<p>The <code>Primitive</code> interface contains two types of intersection routines:</p>
+
+<ul>
+<li><p><code>bool Triangle::intersect(const Ray&amp; r)</code> returns true/false depending on whether ray <code>r</code> hits the triangle.</p></li>
+<li><p><code>bool Triangle::intersect(const Ray&amp; r, Intersection *isect)</code> returns true/false depending on whether ray <code>r</code> hits the triangle, but also populates an <code>Intersection</code> structure with information describing the surface at the point of the hit.</p></li>
+</ul>
+
+<p>You will need to implement both of these routines. Correctly doing so requires you to understand the fields in the <code>Ray</code> structure defined in <i> </i> <em>ray.h</em>.</p>
+
+<ul>
+<li>
+<code>Ray.o</code> represents the 3D point of origin of the ray</li>
+<li>
+<code>Ray.d</code> represents the 3D direction of the ray (this direction will be normalized)</li>
+<li>
+<code>Ray.min_t</code> and <code>Ray.max_t</code> correspond to the minimum and maximum points on the ray.  That is, intersections that lie outside the  <code>Ray.min_t</code> and <code>Ray.max_t</code> range <strong>should not</strong> be considered valid intersections with the primitive.</li>
+</ul>
+
+<p>There are also two additional fields in the <code>Ray</code> structure that can be helpful in accelerating your intersection computations with bounding boxes (see the <code>BBox</code> class in <i> </i> <em>bbox.h</em>).  You may or may not find these precomputed values helpful in your computations.</p>
+
+<ul>
+<li>
+<code>Ray.inv_d</code> is a vector holding (1/x, 1/d.y, 1/d.z)</li>
+<li>
+<code>Ray.sin[3]</code> hold indicators of the sign of each component of the ray's direction.</li>
+</ul>
+
+<p>One important detail of the <code>Ray</code> structure is that <code>min_t</code> and <code>max_t</code> are <code>mutable</code> fields of the <code>Ray</code>.  This means that these fields can be modified by constant member functions such as <code>Triangle::Intersect()</code>.  When finding the first intersection of a ray and the scene, you almost certainly want to update the ray's <code>max_t</code> value after finding hits with scene geometry.  By bounding the ray as tightly as possible, your ray tracer will be able to avoid unnecessary tests with scene geometry that is known to not be able to result in a closest hit, resulting in higher performance.</p>
+
+<p><strong>Step 1: Intersecting Triangles</strong></p>
+
+<p>While faster implementations are possible, we recommend you implement ray-triangle intersection using the method described in the <a href="http://15462.courses.cs.cmu.edu/fall2015/lecture/acceleration/slide_004">lecture slides</a>. Further details of implementing this method efficiently are given in [these notes].</p>
+
+<p>There are two important details you should be aware of about intersection:</p>
+
+<ul>
+<li>
+<p>When finding the first-hit intersection with a triangle, you need to fill in the <code>Intersection</code> structure with details of the hit.  The structure should be initialized with:</p>
+
+<ul>
+<li>
+<code>t</code>: the ray's t-value of the hit point</li>
+<li>
+<code>n</code>: the normal of the surface at the hit point.  This normal should be the interpolated normal (obtained via interpolation of the per-vertex normals according to the barycentric coordinates of the hit point)</li>
+<li>
+<code>primitive</code>: a pointer to the primitive  that was hit</li>
+<li>
+<code>brdf</code>: a pointer to the surface brdf at the hit point (obtained via) </li>
+</ul>
+</li>
+<li><p>When intersection occurs with the back-face of a triangle (the side of the triangle opposite the direction of the normal) you should <strong>return the normal of triangle pointing away from the side of the triangle that was hit.</strong></p></li>
+</ul>
+
+<p>Once you've successfully implemented triangle intersection, you will be able to render many of the scenes in the scenes directory (<i> </i> <em>/dae</em>)).  However, your ray tracer will be <strong>very slow!</strong></p>
+
+<p><strong>Step 2: Intersecting Spheres</strong></p>
+
+<p>Please also implement the intersection routines for the <code>Sphere</code> class in  <i> </i> <em>sphere.cpp</em>.  Remember that your intersection tests should respect the ray's <code>min_t</code> and <code>max_t</code> values.</p>
+
+<h3>
+<a id="task-3-implementing-a-bounding-volume-hierarchy-bvh" class="anchor" href="#task-3-implementing-a-bounding-volume-hierarchy-bvh" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 3: Implementing a Bounding Volume Hierarchy (BVH)</h3>
+
+<p>In this task you will implement a bounding volume hierarchy that accelerates ray-scene intersection.  All of this work will be in the <code>BVHAccel</code> class in <i> </i> <em>bvh.cpp</em>.  </p>
+
+<p>The starter code constructs a valid BVH, but it is a trivial BVH with a single node containing all scene primitives.  A <code>BVHNode</code> has the following fields:</p>
+
+<ul>
+<li>
+<code>BBox bb</code>: the bounding box of the node  (bounds all primitives in the subtree rooted by this node)<br>
+</li>
+<li>
+<code>int start</code>:  start index of primitives in the BVH's primitive array<br>
+</li>
+<li>
+<code>size_t range</code>:   range of index in the primitive list (number of primitives in the subtree rooted by the node)<br>
+</li>
+<li>
+<code>BVHNode* l</code>:     left child node<br>
+</li>
+<li>
+<code>BVHNode* r</code>:     right child node<br>
+</li>
+</ul>
+
+<p>The <code>BVHAccel</code> class maintains an array of all primitives in the BVH (<code>primitives</code>).  The fields <code>start</code> and <code>range</code> in the <code>BVHNode</code> refer the range of contained primitives in this array.</p>
+
+<p><strong>Step 1:</strong> Your job is to construct a BVH using the <a href="http://15462.courses.cs.cmu.edu/fall2015/lecture/acceleration/slide_024">Surface Area Heuristic</a> discussed in class.  Tree construction should occur when the <code>BVHAccel</code> object is constructed.</p>
+
+<p>We have implemented a number of tools to help you debug the BVH.  Press the <kbd>V</kbd> key to enter BVH visualization mode.  This mode allows you to directly visualize a BVH as shown below.  The current BVH node is highlighted in red.  Primitives in the left and right subtrees of the current BVH node are rendered in different colors.  <strong>Press the <kbd>LEFT</kbd> or <kbd>RIGHT</kbd> keys to descend to child nodes of the mesh. Press <kbd>UP</kbd></strong> to move the parent of the current node.</p>
+
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cow_bvh.png" alt="BVH Vis"></p>
+
+<p>Another view showing the contents of a lower node in the BVH:</p>
+
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cow_bvh_2.png" alt="BVH Vis"></p>
+
+<p><strong>Step 2:</strong> Implement the ray-BVH intersection routines required by the <code>Primitive</code> interface.  You may wish to consider the node visit order optimizations we discussed in class.  Once complete, your renderer should be able to render all of the test scenes in a reasonable amount of time.</p>
+
+<h3>
+<a id="task-4-implementing-shadow-rays" class="anchor" href="#task-4-implementing-shadow-rays" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 4: Implementing Shadow Rays</h3>
+
+<p>In this task you will modify <code>Raytracer::trace_ray()</code> to implement accurate shadows.</p>
+
+<p>Currently <code>trace_ray</code> computes the following:</p>
+
+<ul>
+<li>It computes the intersection of ray <code>r</code> with the scene.</li>
+<li>It computes the amount of light arriving at the hit point <code>hit_p</code> (the irradiance at the hit point) by integrating radiance from all scene light sources.</li>
+<li>It computes the radiance reflected from the <code>hit_p</code> in the direction of <code>-r</code>. (The amount of reflected light is based on the brdf of the surface at the hit point.)</li>
+</ul>
+
+<p>Shadows occur when another scene object blocks light emitted from scene light sources towards the hit point (<code>hit_p</code>).  Fortunately, determining whether or not a ray of light from a light source to the hit point is occluded by another object is easy given a working ray tracer (which you have at this point!).  <strong>You simply want to know whether a ray originating from the hit point (<code>p_hit</code>), and traveling towards the light source (<code>dir_to_light</code>) hits any scene geometry before reaching the light (note, the light's distance from the hit point is given by <code>dist_to_light</code>).</strong>   </p>
+
+<p>Your job is to implement the logic needed to compute whether <code>hit_p</code> is in shadow with respect to the current light source sample.  Below are a few tips:</p>
+
+<ul>
+<li>A common pitfall is for the "shadow ray" shot into the scene to determine occlude hits the same triangle as <code>r</code>.  We recommend that you make sure the origin of this ray is offset from the surface to avoid these "self-intersections".  For example, <code>o</code> = <code>p_hit + epsilon * dir_to_light</code>  (note: <code>EPS_D</code> is defined for this purpose).</li>
+<li>You will find it useful to debug your shadow code using the <code>DirectionalLight</code> since it produces hard shadows that are easy to reason about.<br>
+</li>
+</ul>
+
+<p>At this point you should be able to render very striking images. For example, here is the Stanford Dragon model rendered with both a directional light and a hemispherical light.</p>
+
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/shadow_directional.png" alt="Shadow directional"></p>
+
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/shadow_hemisphere.png" alt="Shadow directional"></p>
+
+<h3>
+<a id="task-5-adding-path-tracing" class="anchor" href="#task-5-adding-path-tracing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 5: Adding Path Tracing</h3>
+
+<p><strong>A few notes before getting started:</strong></p>
+
+<p>The new release of the starter code for tasks 5-7 makes a few changes and improvements to the original starter code of the assignment:</p>
+
+<ul>
+<li><p>The <code>BRDF</code> class has been renamed <code>BSDF</code> (for "bidirectional scattering distribution function") to indicate that the class is now responsible for computing both light that is reflected from the surface, but also light that is refracted as it is transmitted through the surface</p></li>
+<li><p>Rather than use a single hardcoded light source in your <code>Pathtracer::trace_ray()</code> lights are now defined as part of the scene description file.  </p></li>
+</ul>
+
+<p>You should change your implementation of the reflectance estimate due to direct lighting in <code>Pathtracer::trace_ray()</code>  to iterate over the list of scene light sources using the following code:</p>
+
+<pre><code>for (SceneLight* light : scene-&gt;lights) {
+    /// do work here...
+}
+</code></pre>
+
+<hr>
+
+<p>In this task you will modify your ray tracer to add support for indirect illumination.  We wish for you to implement the path tracing algorithm that terminates ray paths using Russian Roulette, as discussed in class.  Recommend that you restructure the code in <code>Pathtracer::trace_ray</code> as follows:</p>
+
+<pre><code>Spectrum::Pathtracer::trace_ray() {
+  if (surface hit) {
+       //
+       // compute reflectance due to direct lighting only         
+       //
+       for each light:
+          accumulate reflectance contribution due to light
+
+       //   
+       // add reflectance due to indirect illumination
+       //
+       randomly select a new ray direction (it may be    
+       reflection or transmittence ray depending on 
+       surface type -- see BSDF::sample_f()
+
+       potentially kill path (using Russian roulette)
+
+       evaluate weighted reflectance contribution due
+       to light from this direction
+  }
+}
+</code></pre>
+
+<p>After correctly implementing path tracing your rendering should be able to make a beautifully lit picture like this (note: the image of the simple Cornell Box below was rendering using 256 camera rays per pixel, and thus takes at lot time to render!):</p>
+
+<pre><code>./pathtracer -l 1 -s 256 -m 4 -t 7 ../dae/sky/CBspheres_lambertian.dae
+</code></pre>
+
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cb_lambertian_256.png" alt="Cornell box 256"></p>
+
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cb_lambertian_close.png" alt="Cornell box 256 close"></p>
+
+<p>Here is a quicker rendering using only 1 path per pixel:</p>
+
+<p>./pathtracer -l 1 -s 1 -m 4 -t 7 ../dae/sky/CBspheres_lambertian.dae</p>
+
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cb_lambertian_1.png" alt="Cornell box 1"></p>
+
+<p>Here are a few tips:</p>
+
+<ul>
+<li><p>The termination probability of paths can be determined based on the <a href="http://15462.courses.cs.cmu.edu/fall2015/lecture/globalillum/slide_044">overall throughput</a> of the path (you'll likely need to add a field to the <code>Ray</code> structure to implement this) or based on the value of the BSDF in the current step.  Keep in mind that delta function BRDFs can take on values greater than one, so clamp terminatin probabilities to 1.</p></li>
+<li><p>To convert a Spectrum to a termination property, we recommend you use the luminance (overall brightness) of the Spectrum, which is available via <code>Spectrum::illum()</code></p></li>
+<li><p>We've given you some <a href="http://15462.courses.cs.cmu.edu/fall2015/lecture/globalillum/slide_047">pretty good notes</a> on how to do this part of the assignment.</p></li>
+</ul>
+
+<h3>
+<a id="task-6-adding-new-materials" class="anchor" href="#task-6-adding-new-materials" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 6: Adding New Materials</h3>
+
+<p>Now that you have implemented the ability to sample more complex light paths, it's finally time to add support for more types of materials (other than the fully Lambertian material provided to you in the starter code).  In this task you will add support for two types of materials: a perfect mirror and glass (a material featuring both specular reflection and transmittance).</p>
+
+<p>To get started take a look at the <code>BSDF</code> interface in <i> </i> <em>bsdf.cpp</em>.  There are a number of key methods you should understand:</p>
+
+<ul>
+<li>
+<code>BSDF::f(wo,wi)</code> evaluates the distribution function for a given pair of directions.</li>
+<li>
+<code>BSDF::sample_f(const Vector3D&amp; wo, Vector3D* wi, float* pdf)</code> generates a random sample <code>wo</code> (which may be a reflection direction or a refracted transmitted light direction). The method returns the value of the distribution function for the pair of directions, and the pdf for the selected sample <code>wi</code>.</li>
+</ul>
+
+<p>There are also two helper functions in the BSDF class that you will need to implement:</p>
+
+<ul>
+<li><p><code>BSDF::reflect(w0, ...)</code> returns a direction <code>wi</code> that is the <strong>perfect specular reflection direction</strong> corresponding to <code>wi</code> (reflection of w0 about the normal, which in the surface coordinate space is [0,0,1]).  More detail about specular reflection <a href="http://15462.courses.cs.cmu.edu/fall2015/lecture/reflection/slide_028">is here</a>.</p></li>
+<li><p><code>BSDF::refract(w0, ...)</code> returns the ray that results from refracting the ray <code>w0</code>  about the surface according to <a href="http://15462.courses.cs.cmu.edu/fall2015/lecture/reflection/slide_032">Snell's Law</a>.  The surface's index of refraction is given by the argument <code>ior</code>.  Your implementation should assume that if the ray <code>w0</code> is <strong>entering the surface</strong> (that is, if <code>cos(w0,N) &gt; 0</code>) then the ray is currently in vacuum (index of refraction = 1.0).  If <code>cos(w0,N) &lt; 0</code> then your code should assume the ray is leaving the surface and entering vacuum. <strong>In the case of total internal reflection, the method should return <code>false</code>.</strong></p></li>
+</ul>
+
+<p><strong>What you need to do:</strong></p>
+
+<ol>
+<li><p>Implement the class <code>MirrorBSDF</code> which represents a  material with perfect specular reflection (a perfect mirror).  You should Implement <code>MirrorBSDF::f()</code>, <code>MirrorBSFD::sample_f()</code>, and <code>BSDF::reflect()</code>.  <strong>(Hint: what should the pdf computed by <code>MirrorBSFD::sample_f()</code> be?  What should the reflectance function f() be?)</strong></p></li>
+<li>
+<p>Implement the class  <code>GlassBSDF</code> which is a glass-like material that both reflects light and transmit light.  As discussed <a href="http://15462.courses.cs.cmu.edu/fall2015/lecture/reflection/slide_035">in class</a> the fraction of light that is reflected and transmitted through glass is given by the <strong>dielectric Fresnel equations</strong>, which are <a href="http://15462.courses.cs.cmu.edu/fall2015/article/17/edit">documented in detail here</a>.  Specifically your implementation should:</p>
+
+<ul>
+<li>
+<code>Implement BSDF::refract()</code> to add support for refracted ray paths.</li>
+<li>Use the Fresnel equations to compute the fraction of reflected light and the fraction of transmitted light. Your implementation of</li>
+<li> Implement <code>GlassBSDF::sample_f()</code>.  Your implementation should use the Fresnel equations to compute the fraction of reflected light and the fraction of transmitted light.  The returned ray sample should be either a reflection ray or a refracted ray, with the probability of which type of ray to use for the current path proportional to the Fresnel reflectance. (e.g., If the Fresnel reflectance is 0.9, then you should generate a reflection ray 90% of the time. <strong>What should the pdf be in this case?</strong>)</li>
+<li>You may wish to read <a href="http://15462.courses.cs.cmu.edu/fall2015/article/17/edit">Kayvon's notes</a> on Fresnel equations as well as on how to compute a transmittance BRDF. </li>
+</ul>
+</li>
+</ol>
+
+<p>When you are done, you will be able to render images with as these:</p>
+
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cb_spheres_256.png" alt="Cornell box spheres 256"></p>
+
+<h3>
+<a id="task-7-infinite-environment-lighting-environment-lights" class="anchor" href="#task-7-infinite-environment-lighting-environment-lights" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 7: Infinite Environment Lighting (Environment Lights)</h3>
+
+<p>The final tasks of this assignment will be to implement a new type of light source: an infinite environment light.  An environment light is a light that supplies incident radiance (really, light intensity $\frac{d\Phi}{d\omega}$) from all directions on the sphere.  The source is thought to be "infinity far away", and is representative of realistic lighting environments in the real world: as a result rendering using environment lighting can be quite striking.</p>
+
+<p>The intensity of incoming light from each direction is defined by a texture map parameterized by $\phi$ and $\theta$, as shown below.</p>
+
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/envmap_figure.jpg" alt="Environment map"></p>
+
+<p>In this task you need to implement the <code>EnvironmentLight::sample_L()</code> method in <i> </i> <em>static_scene/environment_light.cpp</em>.  You'll start with uniform direction sampling to get things working, and then move to a more advanced implementation that uses <strong>importance sampling</strong> to significantly reduce variance in rendered images.</p>
+
+<p>__Step one: uniform sampling __</p>
+
+<p>To get things working, your first implementation of <code>EnvironmentLight::sample_L()</code> will be quite simple.  You should generate a random direction on the sphere (<strong>with uniform $\frac{1}{4\pi}$ probability with respect to solid angle</strong>), convert this direction to coordinates $(\phi,\theta)$ and then look up the appropriate radiance value in the texture map using <strong>bilinear interpolation</strong> (note: we recommend you begin with bilinear interpolation to keep things simple.)</p>
+
+<p><strong>Tips:</strong></p>
+
+<ul>
+<li>
+<code>envMap-&gt;data</code> contains the pixels of the environment map</li>
+<li>The size of the environment texture is given by <code>envMap-&gt;w</code> and <code>envMap-&gt;h</code>.</li>
+</ul>
+
+<p>__Step two: importance sampling the environment map __</p>
+
+<p>Much like light in the real world, most of the energy provided by an environment light source is concentrated in the directions toward bright light sources. Therefore, it makes sense to bias selection of sampled directions towards the directions for which incoming radiance is the greatest.  In this final task you will implement an importance sampling scheme for environment lights.</p>
+
+<p>The basic idea is that you will assign a probability to each pixel in the environment map based on the total flux passing through the solid angle it represents.  Specifically, a pixel with coordinate $\theta=\theta_0$ subtends an area $\sin \theta \, d\theta \, d\phi$ on the unit sphere (where $d\theta$ and $d\phi$ the angles subtended by a pixel.)  Therefore the flux through a pixel is proportional to $L \, \sin \theta$.   </p>
+
+<p>Therefore, by <strong>summing the fluxes for all pixels, and then normalizing the values so that they sum to one yields a discrete probability distribution for picking a pixel based on flux through it.</strong></p>
+
+<p>The question is now how to sample from this 2D discrete probability distribution.  We recommend the following process which reduces the problem to drawing samples from two 1D distribution:</p>
+
+<ul>
+<li>Given p($\phi$, $\theta$) the probability distribution for all pixels, compute the marginal probability distribution p($\theta$) = $\sum_{\phi}$ p($\phi$, $\theta$)</li>
+<li>Given for any pixel, compute p($\phi$ | $\theta$) as $\frac{p(\phi, \theta)}{p(\theta)}$.</li>
+</ul>
+
+<p>Given the marginal distribution for $\theta$ and each of the conditional distributions p($\phi$ | $\theta$) , you can select a pixel as follows:</p>
+
+<ol>
+<li>Use the inversion method to first select a "row" of the environment map according to p($\theta$).</li>
+<li>Given this row, use the inversion method to select a pixel in the row according to p($\phi$ | $\theta$).</li>
+</ol>
+
+<p><strong>Here are a few tips:</strong></p>
+
+<ul>
+<li>When computing areas corresponding to a pixel, use the value of $\theta$ at the pixels center.</li>
+<li> We recommend precomputing the joint distributions p($\phi$, $\theta$) and marginal distributions p($\theta$) in the constructor of <code>EnvironmentLight</code> and storing the resulting values in fields of the class.</li>
+<li>
+<code>Spectrum::illum()</code> returns the luminance (brightness) of a Spectrum.  The probability of a pixel should be proportional to the product of its luminance and the solid angle it subtends.</li>
+</ul>
+
+<h3>
+<a id="grading" class="anchor" href="#grading" aria-hidden="true"><span class="octicon octicon-link"></span></a>Grading</h3>
+
+<p>Your code must run on the GHC 5xxxx cluster machines as we will grade on those machines. Do not wait until the submission deadline to test your code on the cluster machines. Keep in mind that there is no perfect way to run on arbitrary platforms. If you experience trouble building on your computer, while the staff may be able to help, but the GHC 5xxx machines will always work and we recommend you work on them.</p>
+
+<p>The assignment consists of a total of 100 pts. The point breakdown is as follows:</p>
+
+<ul>
+<li>Task 1:  10</li>
+<li>Task 2:  15</li>
+<li>Task 3:  20</li>
+<li>Task 4:  10</li>
+<li>Task 5:  15</li>
+<li>Task 6:  15</li>
+<li>Task 7:  15</li>
+</ul>
+
+<h3>
+<a id="handin-instructions" class="anchor" href="#handin-instructions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Handin Instructions</h3>
+
+<p>Your handin directory is on AFS under:</p>
+
+<pre><code>/afs/cs/academic/class/15462-f15-users/ANDREWID/asst3/
+</code></pre>
+
+<p>You will need to create the <code>asst3</code> directory yourself. All your files should be placed there. Please make sure you have a directory and are able to write to it well before the deadline; we are not responsible if you wait until 10 minutes before the deadline and run into trouble. Also, you may need to run <code>aklog cs.cmu.edu</code> after you login in order to read from/write to your submission directory.</p>
+
+<p>You should submit all files needed to build your project, this include:</p>
+
+<ul>
+<li>The <code>src</code> folder with all your source files</li>
+</ul>
+
+<p>Please do not include:</p>
+
+<ul>
+<li>The<code>build</code> folder</li>
+<li>Executables</li>
+<li>Any additional binary or intermediate files generated in the build process.</li>
+</ul>
+
+<p>You should include a <code>README</code> file (plaintext or pdf) if you have implemented any of the extra credit features. In your <code>README</code> file, clearly indicate which extra credit features you have implemented. You should also briefly state anything that you think the grader should be aware of.</p>
+
+<p>Do not add levels of indirection when submitting. And please use the same arrangement as the handout. We will enter your handin directory, and run:</p>
+
+<pre><code>mkdir build &amp;&amp; cd build &amp;&amp; cmake .. &amp;&amp; make
+</code></pre>
+
+<p>and your code should build correctly. The code must compile and run on the GHC 5xxx cluster machines. Be sure to check to make sure you submit all files and that your code builds correctly.</p>
+
+<h3>
+<a id="friendly-advice-from-your-tas" class="anchor" href="#friendly-advice-from-your-tas" aria-hidden="true"><span class="octicon octicon-link"></span></a>Friendly Advice from your TAs</h3>
+
+<ul>
+<li><p>As always, start early.  There is a lot to implement in this assignment, and no official checkpoint, so don't fall behind!</p></li>
+<li><p>While C has many pitfalls, C++ introduces even more wonderful ways to shoot yourself in the foot. It is generally wise to stay away from as many features as possible, and make sure you fully understand the features you do use.</p></li>
+</ul>
+
+<h3>
+<a id="resources-and-notes" class="anchor" href="#resources-and-notes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Resources and Notes</h3>
+
+<ul>
+<li><a href="https://github.com/Bryce-Summers/Writings/blob/master/Programming%20Guides/C_plus_plus_guide.pdf">Bryce's C++ Programming Guide</a></li>
+</ul>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/462cmu/asst3_pathtracer">Asst3 pathtracer</a> is maintained by <a href="https://github.com/462cmu">462cmu</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
