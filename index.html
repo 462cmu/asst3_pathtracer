@@ -311,7 +311,7 @@
 <p>Following the design of modern ray tracing systems, we have chosen to implement the ray tracing components of the Assignment 3 starter code in a very modular fashion.  Therefore, unlike previous assignments, your implementation will touch a number of files in the starter code.  The main structure of the code base is:</p>
 
 <ul>
-<li>The main workhorse class is <code>Raytracer</code> defined in <i> </i> <em>raytracer.cpp</em>.  Inside the ray tracer class everything begins with the method <code>Raytracer::raytrace_pixel()</code> in <i> </i> <em>raytracer.cpp</em>.  This method computes the value of the specified pixel in the output image.</li>
+<li>The main workhorse class is <code>Pathtracer</code> defined in <i> </i> <em>pathtracer.cpp</em>.  Inside the ray tracer class everything begins with the method <code>Pathtracer::raytrace_pixel()</code> in <i> </i> <em>pathtracer.cpp</em>.  This method computes the value of the specified pixel in the output image.</li>
 <li>The camera is defined in the <code>Camera</code> class in <i> </i> <em>camera.cpp</em>.  You will need to modify `Camera::generate_ray()' in Part 1 of the assignment to generate the camera rays that are sent out into the scene.</li>
 <li>Scene objects (e.g., triangles and spheres) are instances of the <code>Primitive</code> interface defined in <i> </i> <em>static_scene/Primitive.h</em>.  You will need to implement the <code>Primitive::intersect()</code> method for both triangles and spheres.</li>
 <li>Lights implement the <code>Light</code> interface defined in  <i> </i> <em>static_scene/Light.h</em>.  The initial starter code has working implementations of directional lights and constant hemispherical lights.</li>
@@ -326,15 +326,15 @@
 
 <p>"Camera rays" emanate from the camera and measure the amount of scene radiance that reaches a point on the camera's sensor plane.  (Given a point on the virtual sensor plane, there is a corresponding camera ray that is traced into the scene.)</p>
 
-<p>Take a look at <code>Raytracer::raytrace_pixel()</code> in <i> </i> <em>raytracer.cpp</em>.  The job of this function is to compute the amount of energy arriving at this pixel of the image. Conveniently, we've given you a function <code>Raytracer::trace_ray(r)</code> that provides a measurement of incoming scene radiance along the direction given by ray <code>r</code>.</p>
+<p>Take a look at <code>Pathtracer::raytrace_pixel()</code> in <i> </i> <em>pathtracer.cpp</em>.  The job of this function is to compute the amount of energy arriving at this pixel of the image. Conveniently, we've given you a function <code>Pathtracer::trace_ray(r)</code> that provides a measurement of incoming scene radiance along the direction given by ray <code>r</code>.</p>
 
-<p>When the number of samples per pixel is 1, you should sample incoming radiance at the <strong>center of each pixel</strong> by constructing a ray <code>r</code> that begins at this sensor location and travels through the camera's pinhole.   Once you have computed this ray, then call <code>Raytracer::trace_ray(r)</code> to get the energy deposited in the pixel.</p>
+<p>When the number of samples per pixel is 1, you should sample incoming radiance at the <strong>center of each pixel</strong> by constructing a ray <code>r</code> that begins at this sensor location and travels through the camera's pinhole.   Once you have computed this ray, then call <code>Pathtracer::trace_ray(r)</code> to get the energy deposited in the pixel.</p>
 
-<p><strong>Step 1:</strong> Given the width and height of the screen, and point in screen space, compute the corresponding coordinates of the point in normalized ([0-1]x[0x1]) screen space in <code>Raytracer::raytrace_pixel()</code>.  Pass these coordinates to the camera via <code>Camera::generate_ray()</code> in <i> </i> <em>camera.cpp</em>.  </p>
+<p><strong>Step 1:</strong> Given the width and height of the screen, and point in screen space, compute the corresponding coordinates of the point in normalized ([0-1]x[0x1]) screen space in <code>Pathtracer::raytrace_pixel()</code>.  Pass these coordinates to the camera via <code>Camera::generate_ray()</code> in <i> </i> <em>camera.cpp</em>.  </p>
 
 <p><strong>Step 2:</strong> Implement <code>Camera::generate_ray()</code>. This function should return a ray <strong>in world space</strong> that reaches the given sensor sample point.  We recommend that you compute this ray in camera space (where the camera pinhole is at the origin, the camera is looking down the -Z axis, and +Y is at the top of the screen.)  Note that the camera maintains camera-space-to-world space transform <code>c2w</code> that will be handy.</p>
 
-<p><strong>Step 3:</strong> Your implementation of <code>Raytracer::raytrace_pixel()</code> must support supersampling (more than one sample per pixel).  The member <code>Raytracer::ns_aa</code> in the raytracer class gives the number of samples of scene radiance your ray tracer should take per pixel (a.k.a. the number of camera rays per pixel.  Note that <code>Raytracer::sampler2d-&gt;get_sample()</code>  provides uniformly distributed random 2D points in the [0-1]^2 box (see the implementation in <i> </i> <em>sampler.cpp</em>).</p>
+<p><strong>Step 3:</strong> Your implementation of <code>Pathtracer::raytrace_pixel()</code> must support supersampling (more than one sample per pixel).  The member <code>Pathtracer::ns_aa</code> in the raytracer class gives the number of samples of scene radiance your ray tracer should take per pixel (a.k.a. the number of camera rays per pixel.  Note that <code>Pathtracer::sampler2d-&gt;get_sample()</code>  provides uniformly distributed random 2D points in the [0-1]^2 box (see the implementation in <i> </i> <em>sampler.cpp</em>).</p>
 
 <p><strong>Tips:</strong> Since it'll be hard to know if you camera rays are correct until you implement primitive intersection, we recommend debugging your camera rays by checking what your implementation of <code>Camera::generate_ray()</code> does with rays at the center of the screen (0.5, 0.5) and at the corners of the image.</p>
 
@@ -495,7 +495,7 @@
 <p>The new release of the starter code for tasks 5-7 makes a few changes and improvements to the original starter code of the assignment:</p>
 
 <ul>
-<li><p>The <code>BRDF</code> class has been renamed <code>BSDF</code> (for "bidirectional scattering distribution function") to indicate that the class is now responsible for computing both light that is reflected from the surface, but also light that is refracted as it is transmitted through the surface</p></li>
+<li><p>The <code>BRDF</code> class has been renamed <code>BSDF</code> (for "bidirectional scattering distribution function") to indicate that the class is now responsible for computing both light that is reflected from the surface, but also light that is refracted as it is transmitted through the surface.  Implementations reside in <i> </i> <em>bsdf.cpp/h</em>.</p></li>
 <li><p>Rather than use a single hardcoded light source in your <code>Pathtracer::trace_ray()</code> lights are now defined as part of the scene description file.  </p></li>
 </ul>
 
@@ -506,9 +506,14 @@
 }
 </code></pre>
 
+<ul>
+<li>
+<code>PathTracer::raytrace_pixel(size_t x, size_t y)</code> now returns a <code>Spectrum</code> for the pixel (it doesn't directly update the output image).  The update is now handled in <code>PathTracer::raytrace_tile()</code> and is included in the starter code.</li>
+</ul>
+
 <hr>
 
-<p>In this task you will modify your ray tracer to add support for indirect illumination.  We wish for you to implement the path tracing algorithm that terminates ray paths using Russian Roulette, as discussed in class.  Recommend that you restructure the code in <code>Pathtracer::trace_ray</code> as follows:</p>
+<p>In this task you will modify your ray tracer to add support for indirect illumination.  We wish for you to implement the path tracing algorithm that terminates ray paths using Russian Roulette, as discussed in class.  Recommend that you restructure the code in <code>Pathtracer::trace_ray()</code> as follows:</p>
 
 <pre><code>Pathtracer::trace_ray() {
   if (surface hit) {
