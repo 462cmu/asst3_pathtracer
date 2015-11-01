@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Asst3 pathtracer by 462cmu</title>
+    <title>Asst3 PathTracer by 462cmu</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -11,7 +11,7 @@
   </head>
   <body>
     <section class="page-header">
-      <h1 class="project-name">Asst3 pathtracer</h1>
+      <h1 class="project-name">Asst3 PathTracer</h1>
       <h2 class="project-tagline">CMU 15-462/662 Assignment 3: A Mini-Path Tracer</h2>
       <a href="https://github.com/462cmu/asst3_pathtracer" class="btn">View on GitHub</a>
       <a href="https://github.com/462cmu/asst3_pathtracer/zipball/master" class="btn">Download .zip</a>
@@ -134,16 +134,16 @@
 <h4>
 <a id="mesh-editor-mode" class="anchor" href="#mesh-editor-mode" aria-hidden="true"><span class="octicon octicon-link"></span></a>Mesh Editor Mode</h4>
 
-<p>When you first run the application, you will see an interactive wireframe view of the scene that should be familiar to you from Assignment 2. You can rotate the camera by left-clicking and dragging, zoom in/out using the scroll wheel (or multi-touch scrolling on a trackpad), and translate (dolly) the camera using right-click drag.  Hitting the spacebar will reset the view.  </p>
+<p>When you first run the application, you will see an interactive wireframe view of the scene that should be familiar to you from Assignment 2. You can rotate the camera by left-clicking and dragging, zoom in/out using the scroll wheel (or multi-touch scrolling on a trackpad), and translate (dolly) the camera using right-click drag.  Hitting the spacebar will reset the view.</p>
 
-<p>As with assignment 2, you'll notice that mesh elements (faces, edges, and vertices) under the cursor are highlighted.  Clicking on these mesh elements will display information about the element and its associated data. The UI has all the same mesh editing controls as the MeshEdit app from Assignment 2 (listed below).  If you copy your implementation of these operators from Assignment 2 into your Assignment 3 codebase, then you will be able to edit scene geometry using the app. </p>
+<p>As with assignment 2, you'll notice that mesh elements (faces, edges, and vertices) under the cursor are highlighted.  Clicking on these mesh elements will display information about the element and its associated data. The UI has all the same mesh editing controls as the MeshEdit app from Assignment 2 (listed below).  If you copy your implementation of these operators from Assignment 2 into your Assignment 3 codebase, then you will be able to edit scene geometry using the app.</p>
 
 <p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/editor_ui.png" alt="PathTracer GUI"></p>
 
 <h4>
 <a id="rendered-output-mode-and-bvh-visualization-mode" class="anchor" href="#rendered-output-mode-and-bvh-visualization-mode" aria-hidden="true"><span class="octicon octicon-link"></span></a>Rendered Output Mode and BVH Visualization Mode</h4>
 
-<p>In addition to the mesh editing UI, the app features two other UI modes. Pressing the <kbd>R</kbd> key toggles display to the rendered output of your ray tracer.  If you press <kbd>R</kbd> in the starter code, you will see a black screen (You have not implemented your ray tracer yet! ).  However, a correct implementation of the assignment will make pictures of the cow that looks like the one below.  </p>
+<p>In addition to the mesh editing UI, the app features two other UI modes. Pressing the <kbd>R</kbd> key toggles display to the rendered output of your ray tracer.  If you press <kbd>R</kbd> in the starter code, you will see a black screen (You have not implemented your ray tracer yet! ).  However, a correct implementation of the assignment will make pictures of the cow that looks like the one below.</p>
 
 <p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cow_render.png" alt="PathTracer GUI"></p>
 
@@ -315,7 +315,7 @@
 <li>The camera is defined in the <code>Camera</code> class in <i> </i> <em>camera.cpp</em>.  You will need to modify `Camera::generate_ray()' in Part 1 of the assignment to generate the camera rays that are sent out into the scene.</li>
 <li>Scene objects (e.g., triangles and spheres) are instances of the <code>Primitive</code> interface defined in <i> </i> <em>static_scene/Primitive.h</em>.  You will need to implement the <code>Primitive::intersect()</code> method for both triangles and spheres.</li>
 <li>Lights implement the <code>Light</code> interface defined in  <i> </i> <em>static_scene/Light.h</em>.  The initial starter code has working implementations of directional lights and constant hemispherical lights.</li>
-<li>Light energy is represented by instances of the <code>Spectrum</code> class.  While it's tempting, we encourage you to avoid thinking of spectrums as colors -- think of them as a measurement of energy over many wavelengths.  Although our current implementation only represents spectrums by red, green, and blue components (much like the RGB representations of color you've used previously in this class), this abstraction makes it possible to consider other implementations of spectrum in the future.  Spectrums can be converted into colors using the <code>Spectrum::toColor()</code> method. </li>
+<li>Light energy is represented by instances of the <code>Spectrum</code> class.  While it's tempting, we encourage you to avoid thinking of spectrums as colors -- think of them as a measurement of energy over many wavelengths.  Although our current implementation only represents spectrums by red, green, and blue components (much like the RGB representations of color you've used previously in this class), this abstraction makes it possible to consider other implementations of spectrum in the future.  Spectrums can be converted into colors using the <code>Spectrum::toColor()</code> method.</li>
 <li>A major portion of the first half of the assignment concerns implementing a bounding volume hierarchy (BVH) that accelerates ray-scene intersection queries.  The implementation of the BVH will be located in <i> </i> <em>bvh.cpp/.h</em>.  Note that a BVH is also an instance of the <code>Primitive</code> interface (A BVH is a scene primitive that itself contains other primitives.)</li>
 </ul>
 
@@ -330,7 +330,7 @@
 
 <p>When the number of samples per pixel is 1, you should sample incoming radiance at the <strong>center of each pixel</strong> by constructing a ray <code>r</code> that begins at this sensor location and travels through the camera's pinhole.   Once you have computed this ray, then call <code>Pathtracer::trace_ray(r)</code> to get the energy deposited in the pixel.</p>
 
-<p><strong>Step 1:</strong> Given the width and height of the screen, and point in screen space, compute the corresponding coordinates of the point in normalized ([0-1]x[0x1]) screen space in <code>Pathtracer::raytrace_pixel()</code>.  Pass these coordinates to the camera via <code>Camera::generate_ray()</code> in <i> </i> <em>camera.cpp</em>.  </p>
+<p><strong>Step 1:</strong> Given the width and height of the screen, and point in screen space, compute the corresponding coordinates of the point in normalized ([0-1]x[0x1]) screen space in <code>Pathtracer::raytrace_pixel()</code>.  Pass these coordinates to the camera via <code>Camera::generate_ray()</code> in <i> </i> <em>camera.cpp</em>.</p>
 
 <p><strong>Step 2:</strong> Implement <code>Camera::generate_ray()</code>. This function should return a ray <strong>in world space</strong> that reaches the given sensor sample point.  We recommend that you compute this ray in camera space (where the camera pinhole is at the origin, the camera is looking down the -Z axis, and +Y is at the top of the screen.)  Note that the camera maintains camera-space-to-world space transform <code>c2w</code> that will be handy.</p>
 
@@ -407,7 +407,7 @@
 <li>
 <code>primitive</code>: a pointer to the primitive  that was hit</li>
 <li>
-<code>bsdf</code>: a pointer to the surface brdf at the hit point (obtained via <code>mesh-&gt;get_bsdf()</code>) </li>
+<code>bsdf</code>: a pointer to the surface brdf at the hit point (obtained via <code>mesh-&gt;get_bsdf()</code>)</li>
 </ul>
 </li>
 <li><p>When intersection occurs with the back-face of a triangle (the side of the triangle opposite the direction of the normal) you should <strong>return the normal of triangle pointing away from the side of the triangle that was hit.</strong></p></li>
@@ -422,26 +422,21 @@
 <h3>
 <a id="task-3-implementing-a-bounding-volume-hierarchy-bvh" class="anchor" href="#task-3-implementing-a-bounding-volume-hierarchy-bvh" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 3: Implementing a Bounding Volume Hierarchy (BVH)</h3>
 
-<p>In this task you will implement a bounding volume hierarchy that accelerates ray-scene intersection.  All of this work will be in the <code>BVHAccel</code> class in <i> </i> <em>bvh.cpp</em>.  </p>
+<p>In this task you will implement a bounding volume hierarchy that accelerates ray-scene intersection.  All of this work will be in the <code>BVHAccel</code> class in <i> </i> <em>bvh.cpp</em>.</p>
 
 <p>The starter code constructs a valid BVH, but it is a trivial BVH with a single node containing all scene primitives.  A <code>BVHNode</code> has the following fields:</p>
 
 <ul>
 <li>
-<code>BBox bb</code>: the bounding box of the node  (bounds all primitives in the subtree rooted by this node)<br>
-</li>
+<code>BBox bb</code>: the bounding box of the node  (bounds all primitives in the subtree rooted by this node)</li>
 <li>
-<code>int start</code>:  start index of primitives in the BVH's primitive array<br>
-</li>
+<code>int start</code>:  start index of primitives in the BVH's primitive array</li>
 <li>
-<code>size_t range</code>:   range of index in the primitive list (number of primitives in the subtree rooted by the node)<br>
-</li>
+<code>size_t range</code>:   range of index in the primitive list (number of primitives in the subtree rooted by the node)</li>
 <li>
-<code>BVHNode* l</code>:     left child node<br>
-</li>
+<code>BVHNode* l</code>:     left child node</li>
 <li>
-<code>BVHNode* r</code>:     right child node<br>
-</li>
+<code>BVHNode* r</code>:     right child node</li>
 </ul>
 
 <p>The <code>BVHAccel</code> class maintains an array of all primitives in the BVH (<code>primitives</code>).  The fields <code>start</code> and <code>range</code> in the <code>BVHNode</code> refer the range of contained primitives in this array.</p>
@@ -471,14 +466,13 @@
 <li>It computes the radiance reflected from the <code>hit_p</code> in the direction of <code>-r</code>. (The amount of reflected light is based on the brdf of the surface at the hit point.)</li>
 </ul>
 
-<p>Shadows occur when another scene object blocks light emitted from scene light sources towards the hit point (<code>hit_p</code>).  Fortunately, determining whether or not a ray of light from a light source to the hit point is occluded by another object is easy given a working ray tracer (which you have at this point!).  <strong>You simply want to know whether a ray originating from the hit point (<code>p_hit</code>), and traveling towards the light source (<code>dir_to_light</code>) hits any scene geometry before reaching the light (note, the light's distance from the hit point is given by <code>dist_to_light</code>).</strong>   </p>
+<p>Shadows occur when another scene object blocks light emitted from scene light sources towards the hit point (<code>hit_p</code>).  Fortunately, determining whether or not a ray of light from a light source to the hit point is occluded by another object is easy given a working ray tracer (which you have at this point!).  <strong>You simply want to know whether a ray originating from the hit point (<code>p_hit</code>), and traveling towards the light source (<code>dir_to_light</code>) hits any scene geometry before reaching the light (note, the light's distance from the hit point is given by <code>dist_to_light</code>).</strong></p>
 
 <p>Your job is to implement the logic needed to compute whether <code>hit_p</code> is in shadow with respect to the current light source sample.  Below are a few tips:</p>
 
 <ul>
 <li>A common ray tracing pitfall is for the "shadow ray" shot into the scene to accidentally hit the same triangle as <code>r</code> (the surface is erroneously determined to be occluded because the shadow ray is determined to hit the surface!).  We recommend that you make sure the origin of the shadow ray is offset from the surface to avoid these erroneous "self-intersections".  For example, <code>o</code> = <code>p_hit + epsilon * dir_to_light</code>  (note: <code>EPS_D</code> is defined for this purpose).</li>
-<li>You will find it useful to debug your shadow code using the <code>DirectionalLight</code> since it produces hard shadows that are easy to reason about.<br>
-</li>
+<li>You will find it useful to debug your shadow code using the <code>DirectionalLight</code> since it produces hard shadows that are easy to reason about.</li>
 </ul>
 
 <p>At this point you should be able to render very striking images. For example, here is the Stanford Dragon model rendered with both a directional light and a hemispherical light.</p>
@@ -496,7 +490,7 @@
 
 <ul>
 <li><p>The <code>BRDF</code> class has been renamed <code>BSDF</code> (for "bidirectional scattering distribution function") to indicate that the class is now responsible for computing both light that is reflected from the surface, but also light that is refracted as it is transmitted through the surface.  Implementations reside in <i> </i> <em>bsdf.cpp/h</em>.</p></li>
-<li><p>Rather than use a single hardcoded light source in your <code>Pathtracer::trace_ray()</code> lights are now defined as part of the scene description file.  </p></li>
+<li><p>Rather than use a single hardcoded light source in your <code>Pathtracer::trace_ray()</code> lights are now defined as part of the scene description file.</p></li>
 </ul>
 
 <p>You should change your implementation of the reflectance estimate due to direct lighting in <code>Pathtracer::trace_ray()</code>  to iterate over the list of scene light sources using the following code:</p>
@@ -518,16 +512,16 @@
 <pre><code>Pathtracer::trace_ray() {
   if (surface hit) {
        //
-       // compute reflectance due to direct lighting only         
+       // compute reflectance due to direct lighting only
        //
        for each light:
           accumulate reflectance contribution due to light
 
-       //   
+       //
        // add reflectance due to indirect illumination
        //
-       randomly select a new ray direction (it may be    
-       reflection or transmittence ray depending on 
+       randomly select a new ray direction (it may be
+       reflection or transmittence ray depending on
        surface type -- see BSDF::sample_f()
 
        potentially kill path (using Russian roulette)
@@ -538,20 +532,14 @@
 }
 </code></pre>
 
-<p>After correctly implementing path tracing your renderer should be able to make a beautifully lit picture like this (note: the image of the simple Cornell Box below was rendering using 256 camera rays per pixel, and thus takes a lot of time to render!):</p>
+<p>After correctly implementing path tracing your renderer should be able to make a beautifully lit picture of the Cornell Box with:</p>
 
-<pre><code>./pathtracer -l 1 -s 256 -m 4 -t 7 ../dae/sky/CBspheres_lambertian.dae
+<pre><code>    ./pathtracer -s 256 -m 2 -t 8 ../dae/sky/CBspheres_lambertian.dae
 </code></pre>
 
+<p>Note the time-quality tradeoff here. With these commandline arguments, your path tracer will be running with 8 worker threads at a sample rate of 256 camera rays per pixel, with a max ray depth of 4. This will produce an image with relatively high quality but will take quite some time to render. Rendering a high quality image will take a very long time as indicated by the image sequence below, so start testing your path tracer early!</p>
+
 <p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cb_lambertian_256.png" alt="Cornell box 256"></p>
-
-<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cb_lambertian_close.png" alt="Cornell box 256 close"></p>
-
-<p>Here is a quicker (but much noisier) rendering using only 1 path per pixel:</p>
-
-<p>./pathtracer -l 1 -s 1 -m 4 -t 7 ../dae/sky/CBspheres_lambertian.dae</p>
-
-<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cb_lambertian_1.png" alt="Cornell box 1"></p>
 
 <p>Here are a few tips:</p>
 
@@ -594,12 +582,12 @@
 <code>Implement BSDF::refract()</code> to add support for refracted ray paths.</li>
 <li>Use the Fresnel equations to compute the fraction of reflected light and the fraction of transmitted light. Your implementation of</li>
 <li> Implement <code>GlassBSDF::sample_f()</code>.  Your implementation should use the Fresnel equations to compute the fraction of reflected light and the fraction of transmitted light.  The returned ray sample should be either a reflection ray or a refracted ray, with the probability of which type of ray to use for the current path proportional to the Fresnel reflectance. (e.g., If the Fresnel reflectance is 0.9, then you should generate a reflection ray 90% of the time. <strong>What should the pdf be in this case?</strong>)</li>
-<li>You should read <a href="http://15462.courses.cs.cmu.edu/fall2015/article/15">the provided notes</a> on the Fresnel equations as well as on how to compute a transmittance BRDF. </li>
+<li>You should read <a href="http://15462.courses.cs.cmu.edu/fall2015/article/15">the provided notes</a> on the Fresnel equations as well as on how to compute a transmittance BRDF.</li>
 </ul>
 </li>
 </ol>
 
-<p>When you are done, you will be able to render images with as these:</p>
+<p>When you are done, you will be able to render images like these:</p>
 
 <p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cb_spheres_256.png" alt="Cornell box spheres 256"></p>
 
@@ -678,18 +666,25 @@
 <p>You should submit all files needed to build your project, this include:</p>
 
 <ul>
-<li>The <code>src</code> folder with all your source files</li>
+<li>
+<code>src</code> folder with all your source files</li>
+<li>
+<code>img</code> folder with screenshots of CBspheres, CBspheres_lambertian you rendered</li>
+<li>
+<code>README</code> file</li>
 </ul>
+
+<p>Note: You can save your rendered images from the application by pressing <kbd>S</kbd> when your path tracer is done rendering. The screenshots you submit should be rendered at relatively high quality configurations. Feel free to include additional images you have rendered with your path tracer, especially the ones that demonstrates the extra credit features you have implemented.</p>
+
+<p>You should also include, in your <code>README</code> file, the pathtracer configuration you used to render the images are submitting. If you have implemented any of the extra credit features, clearly indicate which extra credit features you have implemented. You should also briefly state anything that you think the grader should be aware of.</p>
 
 <p>Please do not include:</p>
 
 <ul>
 <li>The<code>build</code> folder</li>
 <li>Executables</li>
-<li>Any additional binary or intermediate files generated in the build process.</li>
+<li>Any additional binary or intermediate files generated in the build process</li>
 </ul>
-
-<p>You should include a <code>README</code> file (plaintext or pdf) if you have implemented any of the extra credit features. In your <code>README</code> file, clearly indicate which extra credit features you have implemented. You should also briefly state anything that you think the grader should be aware of.</p>
 
 <p>Do not add levels of indirection when submitting. And please use the same arrangement as the handout. We will enter your handin directory, and run:</p>
 
@@ -714,7 +709,7 @@
 </ul>
 
       <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/462cmu/asst3_pathtracer">Asst3 pathtracer</a> is maintained by <a href="https://github.com/462cmu">462cmu</a>.</span>
+        <span class="site-footer-owner"><a href="https://github.com/462cmu/asst3_pathtracer">Asst3 PathTracer</a> is maintained by <a href="https://github.com/462cmu">462cmu</a>.</span>
 
         <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
