@@ -19,7 +19,7 @@
     </section>
 
     <section class="main-content">
-      <p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/teaser.jpg" alt="Resampled mesh"></p>
+      <p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/teaser.jpg" alt="Teaser"></p>
 
 <h3>
 <a id="due-date" class="anchor" href="#due-date" aria-hidden="true"><span class="octicon octicon-link"></span></a>Due Date</h3>
@@ -532,14 +532,16 @@
 }
 </code></pre>
 
-<p>After correctly implementing path tracing your renderer should be able to make a beautifully lit picture of the Cornell Box with:</p>
+<p>As a warmup for the next task, implement <code>BSDF::sample_f</code> for diffuse surfaces (<code>DiffuseBSDF:sample_f</code>). The implementation of <code>DiffuseBSDF::f</code> is already provided to you. After correctly implementing diffuse BSDF and path tracing, your renderer should be able to make a beautifully lit picture of the Cornell Box with:</p>
 
-<pre><code>    ./pathtracer -s 256 -m 2 -t 8 ../dae/sky/CBspheres_lambertian.dae
+<pre><code>    ./pathtracer -s 1024 -m 2 -t 8 ../dae/sky/CBspheres_lambertian.dae
 </code></pre>
+
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cornell_lambertian.png" alt="Cornell Box Lambertian"></p>
 
 <p>Note the time-quality tradeoff here. With these commandline arguments, your path tracer will be running with 8 worker threads at a sample rate of 256 camera rays per pixel, with a max ray depth of 4. This will produce an image with relatively high quality but will take quite some time to render. Rendering a high quality image will take a very long time as indicated by the image sequence below, so start testing your path tracer early!</p>
 
-<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cb_lambertian_256.png" alt="Cornell box 256"></p>
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/spheres.png" alt="Time-Quality Tradeoff "></p>
 
 <p>Here are a few tips:</p>
 
@@ -589,7 +591,7 @@
 
 <p>When you are done, you will be able to render images like these:</p>
 
-<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cb_spheres_256.png" alt="Cornell box spheres 256"></p>
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cornell_classic.png" alt="Cornell box spheres 256"></p>
 
 <h3>
 <a id="task-7-infinite-environment-lighting" class="anchor" href="#task-7-infinite-environment-lighting" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 7: Infinite Environment Lighting</h3>
