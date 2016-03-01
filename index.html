@@ -22,17 +22,17 @@
       <p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/teaser.jpg" alt="Teaser"></p>
 
 <h3>
-<a id="due-date" class="anchor" href="#due-date" aria-hidden="true"><span class="octicon octicon-link"></span></a>Due Date</h3>
+<a id="due-date" class="anchor" href="#due-date" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Due Date</h3>
 
-<p>Wed, Nov 4th, 11:59pm</p>
+<p>Mon 04/04, 11:59pm</p>
 
 <h3>
-<a id="overview" class="anchor" href="#overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview</h3>
+<a id="overview" class="anchor" href="#overview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Overview</h3>
 
 <p>In this project you will implement a simple path tracer that can render pictures with global illumination effects.  The first part of the assignment will focus on providing an efficient implementation of <strong>ray-scene geometry queries</strong>.  In the second half of the assignment you will <strong>add the ability to simulate how light bounces around the scene</strong>, which will allow your renderer to synthesize much higher-quality images.  Much like in assignment 2, input scenes are defined in COLLADA files, so you can create your own scenes for your scenes to render using free software like <a href="http://blender.org">Blender</a>.)</p>
 
 <h3>
-<a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting started</h3>
+<a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting started</h3>
 
 <p>We will be distributing assignments with git. You can find the repository for this assignment at <a href="http://462cmu.github.io/asst3_pathtracer/">http://462cmu.github.io/asst3_pathtracer/</a>. If you are unfamiliar with git, here is what you need to do to get the starter code:</p>
 
@@ -42,7 +42,7 @@
 <p>This will create a <i> </i> <em>asst3_pathtracer</em> folder with all the source files.</p>
 
 <h3>
-<a id="build-instructions" class="anchor" href="#build-instructions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Build Instructions</h3>
+<a id="build-instructions" class="anchor" href="#build-instructions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Build Instructions</h3>
 
 <p>In order to ease the process of running on different platforms, we will be using <a href="http://www.cmake.org" title="CMake Homepage">CMake</a> for our assignments. You will need a CMake installation of version 2.8+ to build the code for this assignment. The GHC 5xxx cluster machines have all the packages required to build the project. It should also be relatively easy to build the assignment and work locally on your OSX or Linux. Building on Windows is currently not supported.</p>
 
@@ -87,7 +87,7 @@
 </code></pre>
 
 <h3>
-<a id="using-the-path-tracer-app" class="anchor" href="#using-the-path-tracer-app" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using the Path Tracer app</h3>
+<a id="using-the-path-tracer-app" class="anchor" href="#using-the-path-tracer-app" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using the Path Tracer app</h3>
 
 <p>When you have successfully built your code, you will get an executable named <strong>pathtracer</strong>. The <strong>pathtracer</strong> executable takes exactly one argument from the command line, which is the path of a COLLADA file describing the scene. For example, to load the Keenan cow <i> </i><em>dae/meshEdit/cow.dae</em> from your build directory:</p>
 
@@ -132,16 +132,16 @@
 </table>
 
 <h4>
-<a id="mesh-editor-mode" class="anchor" href="#mesh-editor-mode" aria-hidden="true"><span class="octicon octicon-link"></span></a>Mesh Editor Mode</h4>
+<a id="mesh-editor-mode" class="anchor" href="#mesh-editor-mode" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Mesh Editor Mode</h4>
 
 <p>When you first run the application, you will see an interactive wireframe view of the scene that should be familiar to you from Assignment 2. You can rotate the camera by left-clicking and dragging, zoom in/out using the scroll wheel (or multi-touch scrolling on a trackpad), and translate (dolly) the camera using right-click drag.  Hitting the spacebar will reset the view.</p>
 
-<p>As with assignment 2, you'll notice that mesh elements (faces, edges, and vertices) under the cursor are highlighted.  Clicking on these mesh elements will display information about the element and its associated data. The UI has all the same mesh editing controls as the MeshEdit app from Assignment 2 (listed below).  If you copy your implementation of these operators from Assignment 2 into your Assignment 3 codebase, then you will be able to edit scene geometry using the app.</p>
+<p>As with assignment 2, you'll notice that mesh elements (faces, edges, and vertices) under the cursor are highlighted.  Clicking on these mesh elements will display information about the element and its associated data. The UI has all the same mesh editing controls as the MeshEdit app from Assignment 2 (listed below).  If you want, you can copy your implementation of these operators from Assignment 2 into your Assignment 3 codebase, then you will be able to edit scene geometry using the app.</p>
 
 <p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/editor_ui.png" alt="PathTracer GUI"></p>
 
 <h4>
-<a id="rendered-output-mode-and-bvh-visualization-mode" class="anchor" href="#rendered-output-mode-and-bvh-visualization-mode" aria-hidden="true"><span class="octicon octicon-link"></span></a>Rendered Output Mode and BVH Visualization Mode</h4>
+<a id="rendered-output-mode-and-bvh-visualization-mode" class="anchor" href="#rendered-output-mode-and-bvh-visualization-mode" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Rendered Output Mode and BVH Visualization Mode</h4>
 
 <p>In addition to the mesh editing UI, the app features two other UI modes. Pressing the <kbd>R</kbd> key toggles display to the rendered output of your ray tracer.  If you press <kbd>R</kbd> in the starter code, you will see a black screen (You have not implemented your ray tracer yet! ).  However, a correct implementation of the assignment will make pictures of the cow that looks like the one below.</p>
 
@@ -150,7 +150,7 @@
 <p>Pressing <kbd>E</kbd> returns to the mesh editor view.  Pressing <kbd>V</kbd> displays the BVH visualizer mode, which will be a helpful visualization tool for debugging the bounding volume hierarchy you will need to implement for this assignment.  (More on this later.)</p>
 
 <h3>
-<a id="summary-of-viewer-controls" class="anchor" href="#summary-of-viewer-controls" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summary of Viewer Controls</h3>
+<a id="summary-of-viewer-controls" class="anchor" href="#summary-of-viewer-controls" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Summary of Viewer Controls</h3>
 
 <p>A table of all the keyboard controls in the interactive mesh viewer part of the <strong>pathtracer</strong> application is provided below.</p>
 
@@ -306,7 +306,7 @@
 </table>
 
 <h3>
-<a id="getting-acquainted-with-the-starter-code" class="anchor" href="#getting-acquainted-with-the-starter-code" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting Acquainted with the Starter Code</h3>
+<a id="getting-acquainted-with-the-starter-code" class="anchor" href="#getting-acquainted-with-the-starter-code" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Acquainted with the Starter Code</h3>
 
 <p>Following the design of modern ray tracing systems, we have chosen to implement the ray tracing components of the Assignment 3 starter code in a very modular fashion.  Therefore, unlike previous assignments, your implementation will touch a number of files in the starter code.  The main structure of the code base is:</p>
 
@@ -322,7 +322,7 @@
 <p>Please refer to the inline comments (or the Doxygen documentation) for further details.</p>
 
 <h3>
-<a id="task-1-generating-camera-rays" class="anchor" href="#task-1-generating-camera-rays" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 1: Generating Camera Rays</h3>
+<a id="task-1-generating-camera-rays" class="anchor" href="#task-1-generating-camera-rays" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Task 1: Generating Camera Rays</h3>
 
 <p>"Camera rays" emanate from the camera and measure the amount of scene radiance that reaches a point on the camera's sensor plane.  (Given a point on the virtual sensor plane, there is a corresponding camera ray that is traced into the scene.)</p>
 
@@ -336,7 +336,12 @@
 
 <p><strong>Step 3:</strong> Your implementation of <code>Pathtracer::raytrace_pixel()</code> must support supersampling (more than one sample per pixel).  The member <code>Pathtracer::ns_aa</code> in the raytracer class gives the number of samples of scene radiance your ray tracer should take per pixel (a.k.a. the number of camera rays per pixel.  Note that <code>Pathtracer::gridSampler-&gt;get_sample()</code>  provides uniformly distributed random 2D points in the [0-1]^2 box (see the implementation in <i> </i> <em>sampler.cpp</em>).</p>
 
-<p><strong>Tips:</strong> Since it'll be hard to know if you camera rays are correct until you implement primitive intersection, we recommend debugging your camera rays by checking what your implementation of <code>Camera::generate_ray()</code> does with rays at the center of the screen (0.5, 0.5) and at the corners of the image.</p>
+<p><strong>Tips:</strong> </p>
+
+<ul>
+<li><p>Since it'll be hard to know if you camera rays are correct until you implement primitive intersection, we recommend debugging your camera rays by checking what your implementation of <code>Camera::generate_ray()</code> does with rays at the center of the screen (0.5, 0.5) and at the corners of the image.</p></li>
+<li><p>Before starting to write any code, go through the existing code and make sure you understand the camera model we are using.</p></li>
+</ul>
 
 <p><strong>Extra credit ideas:</strong></p>
 
@@ -356,7 +361,7 @@
 </ul>
 
 <h3>
-<a id="task-2-intersecting-triangles-and-spheres" class="anchor" href="#task-2-intersecting-triangles-and-spheres" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 2: Intersecting Triangles and Spheres</h3>
+<a id="task-2-intersecting-triangles-and-spheres" class="anchor" href="#task-2-intersecting-triangles-and-spheres" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Task 2: Intersecting Triangles and Spheres</h3>
 
 <p>Now that your ray tracer generates camera rays, you need to implement ray-primitive intersection routines for the two primitives in the starter code: triangles and spheres.  This handout will discuss the requirements of intersecting primitives in terms of triangles.</p>
 
@@ -420,7 +425,7 @@
 <p>Please also implement the intersection routines for the <code>Sphere</code> class in  <i> </i> <em>sphere.cpp</em>.  Remember that your intersection tests should respect the ray's <code>min_t</code> and <code>max_t</code> values.</p>
 
 <h3>
-<a id="task-3-implementing-a-bounding-volume-hierarchy-bvh" class="anchor" href="#task-3-implementing-a-bounding-volume-hierarchy-bvh" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 3: Implementing a Bounding Volume Hierarchy (BVH)</h3>
+<a id="task-3-implementing-a-bounding-volume-hierarchy-bvh" class="anchor" href="#task-3-implementing-a-bounding-volume-hierarchy-bvh" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Task 3: Implementing a Bounding Volume Hierarchy (BVH)</h3>
 
 <p>In this task you will implement a bounding volume hierarchy that accelerates ray-scene intersection.  All of this work will be in the <code>BVHAccel</code> class in <i> </i> <em>bvh.cpp</em>.</p>
 
@@ -454,7 +459,7 @@
 <p><strong>Step 2:</strong> Implement the ray-BVH intersection routines required by the <code>Primitive</code> interface.  You may wish to consider the node visit order optimizations we discussed in class.  Once complete, your renderer should be able to render all of the test scenes in a reasonable amount of time.</p>
 
 <h3>
-<a id="task-4-implementing-shadow-rays" class="anchor" href="#task-4-implementing-shadow-rays" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 4: Implementing Shadow Rays</h3>
+<a id="task-4-implementing-shadow-rays" class="anchor" href="#task-4-implementing-shadow-rays" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Task 4: Implementing Shadow Rays</h3>
 
 <p>In this task you will modify <code>Raytracer::trace_ray()</code> to implement accurate shadows.</p>
 
@@ -482,7 +487,7 @@
 <p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/shadow_hemisphere.png" alt="Shadow directional"></p>
 
 <h3>
-<a id="task-5-adding-path-tracing" class="anchor" href="#task-5-adding-path-tracing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 5: Adding Path Tracing</h3>
+<a id="task-5-adding-path-tracing" class="anchor" href="#task-5-adding-path-tracing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Task 5: Adding Path Tracing</h3>
 
 <p><strong>A few notes before getting started:</strong></p>
 
@@ -534,16 +539,14 @@
 
 <p>As a warmup for the next task, implement <code>BSDF::sample_f</code> for diffuse surfaces (<code>DiffuseBSDF:sample_f</code>). The implementation of <code>DiffuseBSDF::f</code> is already provided to you. After correctly implementing diffuse BSDF and path tracing, your renderer should be able to make a beautifully lit picture of the Cornell Box with:</p>
 
-<pre><code>    ./pathtracer -s 256 -m 4 -t 8 ../dae/sky/CBspheres_lambertian.dae
+<pre><code>    ./pathtracer -s 1024 -m 2 -t 8 ../dae/sky/CBspheres_lambertian.dae
 </code></pre>
 
-<p>Note: the image below is a super-high-quality image rendered using 6400 camera rays per pixel.</p>
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cornell_lambertian.png" alt="Cornell Box Lambertian"></p>
 
-<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/6400SPP_lambertian.png" alt="Cornell Box Lambertian"></p>
+<p>Note the time-quality tradeoff here. With these commandline arguments, your path tracer will be running with 8 worker threads at a sample rate of 256 camera rays per pixel, with a max ray depth of 4. This will produce an image with relatively high quality but will take quite some time to render. Rendering a high quality image will take a very long time as indicated by the image sequence below, so start testing your path tracer early!</p>
 
-<p>Rendering a high quality image will take a very long time as indicated by the image sequence below, so start testing your path tracer early!  (right click the image below and view in a new tab to see it at full resolution)</p>
-
-<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/lambertian_time_quality.png" alt="Time-Quality Tradeoff "></p>
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/spheres.png" alt="Time-Quality Tradeoff "></p>
 
 <p>Here are a few tips:</p>
 
@@ -554,7 +557,7 @@
 </ul>
 
 <h3>
-<a id="task-6-adding-new-materials" class="anchor" href="#task-6-adding-new-materials" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 6: Adding New Materials</h3>
+<a id="task-6-adding-new-materials" class="anchor" href="#task-6-adding-new-materials" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Task 6: Adding New Materials</h3>
 
 <p>Now that you have implemented the ability to sample more complex light paths, it's finally time to add support for more types of materials (other than the fully Lambertian material provided to you in the starter code).  In this task you will add support for two types of materials: a perfect mirror and glass (a material featuring both specular reflection and transmittance).</p>
 
@@ -591,15 +594,12 @@
 </li>
 </ol>
 
-<p>When you are done, you will be able to render images like this (6400 camera rays per pixel):</p>
+<p>When you are done, you will be able to render images like these:</p>
 
-<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/6400SPP_classic.png" alt="Cornell box spheres 6400"></p>
-
-<p>Right click the image below and view in a new tab to see it at full resolution.
-<img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/classic_time_quality.png" alt="Cornell box spheres 6400"></p>
+<p><img src="http://15462.courses.cs.cmu.edu/fall2015content/misc/asst3_images/cornell_classic.png" alt="Cornell box spheres 256"></p>
 
 <h3>
-<a id="task-7-infinite-environment-lighting" class="anchor" href="#task-7-infinite-environment-lighting" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task 7: Infinite Environment Lighting</h3>
+<a id="task-7-infinite-environment-lighting" class="anchor" href="#task-7-infinite-environment-lighting" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Task 7: Infinite Environment Lighting</h3>
 
 <p>The final task of this assignment will be to implement a new type of light source: an infinite environment light.  An environment light is a light that supplies incident radiance (really, the light intensity dPhi/dOmega) from all directions on the sphere.  The source is thought to be "infinitely far away", and is representative of realistic lighting environments in the real world: as a result, rendering using environment lighting can be quite striking.</p>
 
@@ -644,7 +644,7 @@
 </ul>
 
 <h3>
-<a id="grading" class="anchor" href="#grading" aria-hidden="true"><span class="octicon octicon-link"></span></a>Grading</h3>
+<a id="grading" class="anchor" href="#grading" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Grading</h3>
 
 <p>Your code must run on the GHC 5xxxx cluster machines as we will grade on those machines. Do not wait until the submission deadline to test your code on the cluster machines. Keep in mind that there is no perfect way to run on arbitrary platforms. If you experience trouble building on your computer, while the staff may be able to help, but the GHC 5xxx machines will always work and we recommend you work on them.</p>
 
@@ -661,11 +661,12 @@
 </ul>
 
 <h3>
-<a id="handin-instructions" class="anchor" href="#handin-instructions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Handin Instructions</h3>
+<a id="handin-instructions" class="anchor" href="#handin-instructions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Handin Instructions</h3>
 
 <p>Your handin directory is on AFS under:</p>
 
-<pre><code>/afs/cs/academic/class/15462-f15-users/ANDREWID/asst3/
+<pre><code>/afs/cs/academic/class/15462-s16-users/ANDREWID/asst3/, or
+/afs/cs/academic/class/15662-s16-users/ANDREWID/asst3/
 </code></pre>
 
 <p>You will need to create the <code>asst3</code> directory yourself. All your files should be placed there. Please make sure you have a directory and are able to write to it well before the deadline; we are not responsible if you wait until 10 minutes before the deadline and run into trouble. Also, you may need to run <code>aklog cs.cmu.edu</code> after you login in order to read from/write to your submission directory.</p>
@@ -701,18 +702,19 @@
 <p>and your code should build correctly. The code must compile and run on the GHC 5xxx cluster machines. Be sure to check to make sure you submit all files and that your code builds correctly.</p>
 
 <h3>
-<a id="friendly-advice-from-your-tas" class="anchor" href="#friendly-advice-from-your-tas" aria-hidden="true"><span class="octicon octicon-link"></span></a>Friendly advice from your TAs</h3>
+<a id="friendly-advice-from-your-tas" class="anchor" href="#friendly-advice-from-your-tas" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Friendly advice from your TAs</h3>
 
 <ul>
-<li><p>As always, start early.  There is a lot to implement in this assignment, and no official checkpoint, so don't fall behind!</p></li>
-<li><p>While C has many pitfalls, C++ introduces even more wonderful ways to shoot yourself in the foot. It is generally wise to stay away from as many features as possible, and make sure you fully understand the features you do use.</p></li>
+<li><p>As always, start early.  There is a lot to implement in this assignment, and no official checkpoint, so don't fall behind! Depending on your implementation, the rendering process might take several hours to finish. So start early to make sure you have enough time to render some beautiful images (which is the most enjoyable part of this assignment).</p></li>
+<li><p>While C has many pitfalls, C++ introduces even more wonderful ways to shoot yourself in the foot. It is generally wise to stay away from as many features as possible, and make sure you fully understand the features you do use. The <a href="https://isocpp.org/faq">C++ Super-FAQ</a> is a great resource that explains things in a way that's detailed yet easy to understand (unlike a lot of C++ resources), and was co-written by Bjarne Stroustrup, the creator of C++!</p></li>
 </ul>
 
 <h3>
-<a id="resources-and-notes" class="anchor" href="#resources-and-notes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Resources and Notes</h3>
+<a id="resources-and-notes" class="anchor" href="#resources-and-notes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Resources and Notes</h3>
 
 <ul>
 <li><a href="https://github.com/Bryce-Summers/Writings/blob/master/Programming%20Guides/C_plus_plus_guide.pdf">Bryce's C++ Programming Guide</a></li>
+<li><a href="https://isocpp.org/faq">C++ Super-FAQ</a></li>
 </ul>
 
       <footer class="site-footer">
