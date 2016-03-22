@@ -416,6 +416,7 @@
 </ul>
 </li>
 <li><p>When intersection occurs with the back-face of a triangle (the side of the triangle opposite the direction of the normal) you should <strong>return the normal of triangle pointing away from the side of the triangle that was hit.</strong></p></li>
+<li><p>If you need to distinguish back-face-hit and front-face-hit in your implementation, you might consider adding a flag(e.g. bool is_back_hit) to the 'Intersection' structure.</p></li>
 </ul>
 
 <p>Once you've successfully implemented triangle intersection, you will be able to render many of the scenes in the scenes directory (<i> </i> <em>/dae</em>)).  However, your ray tracer will be <strong>very slow!</strong></p>
